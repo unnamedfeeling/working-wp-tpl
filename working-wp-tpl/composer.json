@@ -1,0 +1,7 @@
+{
+    "name": "unnamedfeeling/working-wp-tpl",
+    "type": "wordpress-theme",
+    "require": {
+        "composer/installers": "^1.0"
+    }
+}
