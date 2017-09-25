@@ -4,5 +4,9 @@
     "require": {
         "composer/installers": "^1.0"
     },
+<<<<<<< HEAD
 	"version": "1.0.3"
+=======
+	"version": "1.0.2"
+>>>>>>> 7d216f5a63b29c034a46046e825c37386a95bc15
 }
