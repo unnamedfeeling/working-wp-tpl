@@ -1,30 +1,25 @@
-			<!-- footer -->
 			<footer class="footer" role="contentinfo">
-
-				<!-- copyright -->
 				<p class="copyright">
 					&copy; <?php echo date('Y'); ?> Copyright <?php bloginfo('name'); ?>. <?php _e('Powered by', 'html5blank'); ?>
 					<a href="//wordpress.org">WordPress</a> &amp; <a href="//html5blank.com">HTML5 Blank</a>.
 				</p>
-				<!-- /copyright -->
-
 			</footer>
-			<!-- /footer -->
-
 		</div>
-		<!-- /wrapper -->
-
-		<?php wp_footer(); ?>
-
-		<!-- analytics -->
-		<script>
-		(function(f,i,r,e,s,h,l){i['GoogleAnalyticsObject']=s;f[s]=f[s]||function(){
-		(f[s].q=f[s].q||[]).push(arguments)},f[s].l=1*new Date();h=i.createElement(r),
-		l=i.getElementsByTagName(r)[0];h.async=1;h.src=e;l.parentNode.insertBefore(h,l)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-		ga('create', 'UA-XXXXXXXX-XX', 'yourdomain.com');
-		ga('send', 'pageview');
-		</script>
-
+		<?php
+		global $options;
+		wp_footer();
+		if(!empty($options['advd']['custom_css'])){
+			echo ($options['advd']['custom_css']!==' ') ? '<style>'.htmlspecialchars_decode($options['advd']['custom_css']).'</style>' : null;
+		}
+		if(!empty($options['advd']['custom_js'])){
+			echo ($options['advd']['custom_js']!==' ') ? '<script>'.htmlspecialchars_decode($options['advd']['custom_js']).'</script>' : null;
+		}
+		if(!empty($options['advd']['custom_js_tag'])){
+			echo ($options['advd']['custom_js_tag']!==' ') ? str_replace('\"', '"', $options['advd']['custom_js_tag']) : null;
+		}
+		if(!empty($options['advd']['custom_noscript'])){
+			echo ($options['advd']['custom_noscript']!==' ') ? '<noscript>'.str_replace('\\\'', '\'', $options['advd']['custom_noscript']).'</noscript>' : null;
+		}
+		?>
 	</body>
 </html>

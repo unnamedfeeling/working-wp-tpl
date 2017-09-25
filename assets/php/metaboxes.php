@@ -3,7 +3,7 @@ function generic_metaboxes() {
 	// Start with an underscore to hide fields from custom fields list
 	global $options;
 	// $prefix = 'startime_';
-	$prefix = $options['prefix'];
+	$prefix = $options['prfx'];
 
 	/**
 	 * Initiate the metabox

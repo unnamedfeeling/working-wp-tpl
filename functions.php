@@ -20,14 +20,19 @@ if ( file_exists( dirname( __FILE__ ) . '/assets/php/cmb2-attached-posts/cmb2-at
   require_once dirname( __FILE__ ) . '/assets/php/cmb2-attached-posts/cmb2-attached-posts-field.php';
 }
 
+// CMB2 attached posts ajax
+if ( file_exists( dirname( __FILE__ ) . '/assets/php/cmb2-field-post-search-ajax/cmb-field-post-search-ajax.php' ) ) {
+  require_once dirname( __FILE__ ) . '/assets/php/cmb2-field-post-search-ajax/cmb-field-post-search-ajax.php';
+}
+
 // metaboxes include
 if ( file_exists( dirname( __FILE__ ) . '/assets/php/metaboxes.php' ) ) {
   require_once dirname( __FILE__ ) . '/assets/php/metaboxes.php';
 }
 
 // tabbed admin menu include
-if ( file_exists( dirname( __FILE__ ) . '/assets/php/metaboxes.php' ) ) {
-  require_once dirname( __FILE__ ) . '/assets/php/metaboxes.php';
+if ( file_exists( dirname( __FILE__ ) . '/assets/php/tabbed-admin-menu.php' ) ) {
+  require_once dirname( __FILE__ ) . '/assets/php/tabbed-admin-menu.php';
 }
 
 /*------------------------------------*\
@@ -45,18 +50,9 @@ if (function_exists('add_theme_support')){
     add_image_size('large', 700, '', true); // Large Thumbnail
     add_image_size('medium', 250, '', true); // Medium Thumbnail
     add_image_size('small', 120, '', true); // Small Thumbnail
-    add_image_size('custom-size', 700, 200, true);
-    add_image_size('main-review', 230, 230, true);
-    add_image_size('about-photo', 350, 350, true);
-    add_image_size('news-img', 355, 237, true);
-    add_image_size('main-projects', 700, 418, true);
-    add_image_size('main-photos', 901, 600, true);
-    add_image_size('feat-projects-photos', 960, 530, true);
-    add_image_size('main-videos', 340, 191, true);
-    add_image_size('single-header', 1600, '', true);
-    add_image_size('genpartner', 430, '', true);
-    add_image_size('nominations-img', 446, 384, true);
-    add_image_size('schoolproj-mainimg-loop', 376, 435, true);
+    add_image_size('main-slide', 1150, 500, true);
+    add_image_size('main-prod-loop', 230, 120, true);
+    add_image_size('single-prod-img', 385, 257, true);
 
     // Add Support for Custom Backgrounds - Uncomment below if you're going to use
     /*add_theme_support('custom-background', array(
@@ -85,6 +81,8 @@ if (function_exists('add_theme_support')){
 
     // Localisation Support
     load_theme_textdomain('generic', get_template_directory() . '/assets/languages');
+
+    add_theme_support( 'woocommerce' );
 }
 
 /*------------------------------------*\
@@ -94,6 +92,8 @@ if (function_exists('add_theme_support')){
 // Global options Define
 function generic_globals(){
 	global $options;
+	$options['prfx']='generic_';
+	$options['tpld']=get_template_directory_uri();
 	$options['brnc']=get_option('generic_options');
 	$options['gnrl']=get_option('general_options');
 	$options['socl']=get_option('social_options');
@@ -164,7 +164,7 @@ function generic_nav(){
         'after'           => '',
         'link_before'     => '',
         'link_after'      => '',
-        'items_wrap'      => '<ul class="header__bottom-menu-list">%3$s</ul>',
+        'items_wrap'      => '<ul class="headmidmenu">%3$s</ul>',
         'depth'           => 0,
         'walker'          => new Nav_Menu_Walker
         )
@@ -184,14 +184,22 @@ class Nav_Menu_Walker extends Walker_Nav_Menu{
 	 */
 	public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ){
 		// print_r($item);
-		$class=($depth>=1) ? 'header__bottom-sub-menu-item' : 'header__bottom-menu-item';
-		$class.=($depth==0&&$item->current) ? ' active':'';
+
+		$class=($depth>=1) ? 'headmenubot_item' : 'headmidmenu_item';
+		$class.=($depth==0&&$item->current&&!in_array('headmidmenu_item-logo', $item->classes)) ? ' headmidmenu_link-active':'';
 		// $class.=($depth>=1 ? 'header__bottom-sub-menu-link ' : 'header__bottom-menu-link ');
-		$class.=($depth>=1&&$item->current ? ' active ':'');
+		$class.=($depth>=1&&$item->current ? ' headmidmenu_link-active ':'');
 		$class.=' d-'.$depth;
+		$addclass=' ';
+		foreach ($item->classes as $key => $val) {
+			$addclass.=' '.$val;
+		}
+		$class.=$addclass;
 		$output.= '<li class="'.$class.'">';
-		$jsbtn=(in_array('menu-item-has-children', $item->classes)) ? ' js-drop-btn' : '';
-		$attributes  = ($depth>=1) ? ' class="header__bottom-sub-menu-link"' : ' class="header__bottom-menu-link'.$jsbtn.'"';
+		$jsbtn=(in_array('headmidmenu_item-logo', $item->classes)) ? ' headmidmenu_link-logo' : '';
+		// $jsbtn='';
+		// print_r($item->classes);
+		$attributes  = ($depth>=1) ? ' class="headmenubot_link"' : ' class="headmidmenu_link'.$jsbtn.'"';
 		if( !empty ( $item->attr_title ) && $item->attr_title !== $item->title ){
 			// Avoid redundant titles
 			$attributes .= ' title="' . esc_attr( $item->attr_title ) .'"';
@@ -216,9 +224,9 @@ class Nav_Menu_Walker extends Walker_Nav_Menu{
 	 */
 	public function start_lvl( &$output, $depth = 0, $args = array() ){
 		if($depth>=0){
-			$output .= '<div class="js-sub-menu header__bottom-sub-menu"><ul class="header__bottom-sub-menu-list">';
+			$output .= '<ul class="headmenubot">';
 		} else {
-			$output .= '<ul class="header__bottom-menu-list">';
+			$output .= '<ul class="headmidmenu">';
 		}
 	}
 	/**
@@ -229,11 +237,11 @@ class Nav_Menu_Walker extends Walker_Nav_Menu{
 	 */
 	public function end_lvl( &$output, $depth = 0, $args = array() ){
 		// $output .= '</ul>';
-		if($depth>=0){
-			$output .= '</ul></div>';
-		} else {
-			$output .= '</li>';
-		}
+		// if($depth>=0){
+			$output .= '</ul>';
+		// } else {
+		// 	$output .= '</li>';
+		// }
 	}
 	/**
 	 * @see Walker::end_el()
@@ -246,10 +254,104 @@ class Nav_Menu_Walker extends Walker_Nav_Menu{
 	}
 }
 
-function generic_footer_nav(){
+function generic_footer1_nav(){
     wp_nav_menu(
     array(
-        'theme_location'  => 'footer-menu',
+        'theme_location'  => 'footer-menu1',
+        'menu'            => '',
+        'container'       => 'nav',
+        'container_class' => 'menu-{menu slug}-container',
+        'container_id'    => '',
+        'menu_class'      => 'menu',
+        'menu_id'         => '',
+        'echo'            => true,
+        'fallback_cb'     => 'wp_page_menu',
+        'before'          => '',
+        'after'           => '',
+        'link_before'     => '',
+        'link_after'      => '',
+        'items_wrap'      => '<p class="footer_text">Компания</p><ul class="footer_list">%3$s</ul>',
+        'depth'           => 0,
+		'walker'          => new Nav_Footer1_Menu_Walker
+        )
+    );
+}
+
+// Menu walker
+class Nav_Footer1_Menu_Walker extends Walker_Nav_Menu{
+	/**
+	 * Start the element output.
+	 *
+	 * @param  string $output Passed by reference. Used to append additional content.
+	 * @param  object $item   Menu item data object.
+	 * @param  int $depth     Depth of menu item. May be used for padding.
+	 * @param  array $args    Additional strings.
+	 * @return void
+	 */
+	public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ){
+		// print_r($item);
+		// $jsbtn=(in_array('menu-item-has-children', $item->classes)) ? ' js-footer-submenu' : '';
+		$class='footer_item';
+		$class.=($depth==0&&$item->current) ? ' active':'';
+		$class.=($depth>=1 ? 'footer-main__link ':'');
+		$class.=($depth>=1&&$item->current ? 'active ':'');
+		$class.=' d-'.$depth;
+		$output.= '<li class="'.$class.'">';
+		$attributes  = ($depth>=1) ? '' : ' class="footer_link"';
+		// $attributes  = '';
+		if( !empty ( $item->attr_title ) && $item->attr_title !== $item->title ){
+			// Avoid redundant titles
+			$attributes .= ' title="' . esc_attr( $item->attr_title ) .'"';
+		} else {
+			$title       = apply_filters( 'the_title', $item->title, $item->ID );
+			$attributes .= ' title="' . $title .'"';
+		}
+		! empty ( $item->url )
+			and $attributes .= ' href="' . esc_attr( $item->url ) .'"';
+		$attributes  = trim( $attributes );
+		$title       = apply_filters( 'the_title', $item->title, $item->ID );
+		$item_output = "$args->before<a $attributes>$args->link_before$title</a>"
+						. "$args->link_after$args->after";
+		// Since $output is called by reference we don't need to return anything.
+		$output .= apply_filters('walker_nav_menu_start_el',   $item_output,   $item,   $depth,   $args);
+	}
+	/**
+	 * @see Walker::start_lvl()
+	 *
+	 * @param string $output Passed by reference. Used to append additional content.
+	 * @return void
+	 */
+	public function start_lvl( &$output, $depth = 0, $args = array() ){
+		if($depth>=0){
+			$output .= '<ul class="footer-main-sublist">';
+		} else {
+			$output .= '<ul class="footer-main-list clearfix">';
+		}
+	}
+	/**
+	 * @see Walker::end_lvl()
+	 *
+	 * @param string $output Passed by reference. Used to append additional content.
+	 * @return void
+	 */
+	public function end_lvl( &$output, $depth = 0, $args = array() ){
+		$output .= '</ul>';
+	}
+	/**
+	 * @see Walker::end_el()
+	 *
+	 * @param string $output Passed by reference. Used to append additional content.
+	 * @return void
+	 */
+	function end_el( &$output, $item, $depth = 0, $args = array() ){
+		$output .= '</li>';
+	}
+}
+
+function generic_footer2_nav(){
+    wp_nav_menu(
+    array(
+        'theme_location'  => 'footer-menu2',
         'menu'            => '',
         'container'       => 'div',
         'container_class' => 'menu-{menu slug}-container',
@@ -262,15 +364,15 @@ function generic_footer_nav(){
         'after'           => '',
         'link_before'     => '',
         'link_after'      => '',
-        'items_wrap'      => '<ul class="footer-main-list clearfix">%3$s</ul>',
+        'items_wrap'      => '<p class="footer_text">Информация</p><ul class="footer_list">%3$s</ul>',
         'depth'           => 0,
-		'walker'          => new Nav_Footer_Menu_Walker
+		'walker'          => new Nav_Footer2_Menu_Walker
         )
     );
 }
 
 // Menu walker
-class Nav_Footer_Menu_Walker extends Walker_Nav_Menu{
+class Nav_Footer2_Menu_Walker extends Walker_Nav_Menu{
 	/**
 	 * Start the element output.
 	 *
@@ -282,14 +384,14 @@ class Nav_Footer_Menu_Walker extends Walker_Nav_Menu{
 	 */
 	public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ){
 		// print_r($item);
-		$jsbtn=(in_array('menu-item-has-children', $item->classes)) ? ' js-footer-submenu' : '';
-		$class='footer-main__item'.$jsbtn;
+		// $jsbtn=(in_array('menu-item-has-children', $item->classes)) ? ' js-footer-submenu' : '';
+		$class='footer_item';
 		$class.=($depth==0&&$item->current) ? ' active':'';
 		$class.=($depth>=1 ? 'footer-main__link ':'');
 		$class.=($depth>=1&&$item->current ? 'active ':'');
 		$class.=' d-'.$depth;
 		$output.= '<li class="'.$class.'">';
-		$attributes  = ($depth>=1) ? '' : ' class="footer-main__link"';
+		$attributes  = ($depth>=1) ? '' : ' class="footer_link"';
 		// $attributes  = '';
 		if( !empty ( $item->attr_title ) && $item->attr_title !== $item->title ){
 			// Avoid redundant titles
@@ -345,7 +447,7 @@ function generic_header_scripts(){
     if ($GLOBALS['pagenow'] != 'wp-login.php' && !is_admin()) {
 		wp_deregister_script( 'jquery' );
 		wp_deregister_script( 'jquery-migrate' );
-		wp_enqueue_script('jquery', '//cdn.jsdelivr.net/g/jquery@2.2.4', array(), '2.2.4');
+		wp_enqueue_script('jquery', '//cdn.jsdelivr.net/combine/npm/jquery@3.2.1,npm/jquery-migrate@3.0.0,npm/blazy@1.8.2,npm/magnific-popup@1.1.0,npm/slick-carousel@1.7.1', array(), '3.2.1');
     }
 }
 
@@ -360,18 +462,20 @@ function generic_conditional_scripts(){
 
 // Load HTML5 Blank styles
 function generic_styles(){
-	// global $post;
-	// print_r($GLOBALS);
-	wp_enqueue_style('bootstrap', '//cdn.jsdelivr.net/bootstrap/3.3.7/css/bootstrap.min.css', array(), '1.0', 'all');
-	wp_enqueue_style('simple', get_template_directory_uri().'/assets/css/simple.min.css', array(), '1.0', 'all');
+	wp_enqueue_style('gfonts', '//fonts.googleapis.com/css?family=Lato:400,700|Open+Sans:300,400,700|Playfair+Display', array(), '1.0', 'all');
+	wp_enqueue_style('mainstyle', get_template_directory_uri().'/assets/dist/app.min.css', array(), '1.0', 'all');
 }
 
 // footer scripts
 function generic_footer_scripts(){
 	wp_deregister_script( 'wp-embed' );
-	wp_enqueue_script('footer-scripts', '//cdn.jsdelivr.net/g/jquery.magnific-popup@1.0.0,blazy@1.8.2', array('jquery'), '1.0');
-	wp_enqueue_script('slickslider', get_template_directory_uri() . '/assets/js/libs/slick/slick/slick.min.js', array('jquery'), '1.6.1');
-	wp_enqueue_script('genericscripts-min', get_template_directory_uri() . '/assets/js/scripts.min.js', array('jquery', 'jquery.inputmask', 'pickMeUp', 'slickslider'), '1.0.0');
+	// wp_enqueue_script('footer-scripts', '//cdn.jsdelivr.net/g/jquery.magnific-popup@1.0.0,blazy@1.8.2', array('jquery'), '1.0');
+	// wp_enqueue_script('slickslider', get_template_directory_uri() . '/assets/js/libs/slick/slick/slick.min.js', array('jquery'), '1.6.1');
+	wp_enqueue_script('genericscripts-min', get_template_directory_uri() . '/assets/dist/app.min.js', array(), '1.0.0');
+	wp_localize_script( 'genericscripts-min', 'ajax_func', array(
+		'ajax_url' => admin_url( 'admin-ajax.php' ),
+		'tpld' => get_template_directory_uri(),
+	));
 }
 
 //cleanup version tag
@@ -399,7 +503,8 @@ function disable_wp_emojicons() {
 function register_generic_menu(){
     register_nav_menus(array( // Using array to specify more menus if needed
         'header-menu' => __('Главное меню', 'generic'), // Main Navigation
-        'footer-menu' => __('Меню футера', 'generic'), // Sidebar Navigation
+        'footer-menu1' => __('Меню футера 1', 'generic'), // Sidebar Navigation
+        'footer-menu2' => __('Меню футера 2', 'generic'), // Sidebar Navigation
         // 'extra-menu' => __('Extra Menu', 'generic') // Extra Navigation if needed (duplicate as many as you need!)
     ));
 }
@@ -671,18 +776,39 @@ function generic_ajax_posts(){
 	die(json_encode($response));
 }
 
-// callback for diltering html tags in admin input
-function unfilter_html_tags( $value, $field_args, $field ) {
-    /*
-     * Do your custom sanitization.
-     * strip_tags can allow whitelisted tags
-     * http://php.net/manual/en/function.strip-tags.php
-     */
-    $value = strip_tags( $value, '<p><a><br><br/><span>' );
-
-    return $value;
+// ajax get cart content
+function generic_ajax_cart(){
+	global $woocommerce;
+	ob_start();
+	echo WC()->cart->get_cart_contents_count();
+	$response['content']=ob_get_clean();
+	die(json_encode($response));
 }
 
+// callback for diltering html tags in admin input
+function unfilter_html_tags( $value, $field_args, $field ) {
+	/*
+	 * Do your custom sanitization.
+	 * strip_tags can allow whitelisted tags
+	 * http://php.net/manual/en/function.strip-tags.php
+	 */
+	$value = strip_tags( $value, '<p><a><br><br/><span><b><i>' );
+
+	return $value;
+}
+
+// callback for diltering all html tags in admin input
+function unfilter_all( $value, $field_args, $field ) {
+	/*
+	 * Do your custom sanitization.
+	 * strip_tags can allow whitelisted tags
+	 * http://php.net/manual/en/function.strip-tags.php
+	 */
+	// $value = strip_tags( $value, '<p><a><br><br/><span><iframe><div>' );
+	$value=str_replace('"', '\'', $value);
+
+	return $value;
+}
 // check if this $post->ID has children
 function has_children($pid) {
 	$children = get_children( array(
@@ -704,6 +830,31 @@ function has_children($pid) {
 //     return $content;
 // });
 
+// search only by title
+function title_like_posts_where( $where, $wp_query ) {
+    global $wpdb;
+    if ( $post_title_like = $wp_query->get( 'post_title_like' ) ) {
+        $where .= ' AND ' . $wpdb->posts . '.post_title LIKE \'' . esc_sql( $wpdb->esc_like( $post_title_like ) ) . '%\'';
+    }
+    return $where;
+}
+
+function add_my_currency_symbol( $currency_symbol, $currency ) {
+     switch( $currency ) {
+          case 'RUB': $currency_symbol = 'руб'; break;
+     }
+     return $currency_symbol;
+}
+
+
+function wpa83367_price_html( $price, $product ){
+	if (is_product()) {
+    	return '<span class="product_digit">'.str_replace( 'руб', '<sup>руб</sup>', $price ).'</span>';
+	} else {
+		return $price;
+	}
+}
+
 /*------------------------------------*\
     Actions + Filters + ShortCodes
 \*------------------------------------*/
@@ -715,7 +866,7 @@ add_action('wp_print_scripts', 'generic_conditional_scripts'); // Add Conditiona
 add_action('get_header', 'enable_threaded_comments'); // Enable Threaded Comments
 add_action('wp_enqueue_scripts', 'generic_styles'); // Add Theme Stylesheet
 add_action('init', 'register_generic_menu'); // Add HTML5 Blank Menu
-add_action('init', 'create_post_type_html5'); // Add our HTML5 Blank Custom Post Type
+// add_action('init', 'create_post_type_html5'); // Add our HTML5 Blank Custom Post Type
 add_action('widgets_init', 'my_remove_recent_comments_style'); // Remove inline Recent Comment Styles from wp_head()
 add_action('init', 'html5wp_pagination'); // Add our HTML5 Pagination
 add_action('init', 'generic_globals');
@@ -725,6 +876,8 @@ add_action( 'wp_ajax_nopriv_generic_news_like', 'generic_news_like' );
 add_action( 'wp_ajax_generic_news_like', 'generic_news_like' );
 add_action( 'wp_ajax_nopriv_generic_ajax_posts', 'generic_ajax_posts' );
 add_action( 'wp_ajax_generic_ajax_posts', 'generic_ajax_posts' );
+add_action( 'wp_ajax_nopriv_generic_ajax_cart', 'generic_ajax_cart' );
+add_action( 'wp_ajax_generic_ajax_cart', 'generic_ajax_cart' );
 add_action( 'pre_get_posts', 'posts_per_page_func' );
 
 // Remove Actions
@@ -758,6 +911,11 @@ add_filter( 'script_loader_src', 'remove_cssjs_ver', 15, 1 );
 add_filter( 'style_loader_src', 'remove_cssjs_ver', 15, 1 );
 // add_filter( 'wpcf7_load_css', '__return_false' );
 add_filter( 'emoji_svg_url', '__return_false' );
+// add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
+add_filter( 'posts_where', 'title_like_posts_where', 10, 2 );
+add_filter('woocommerce_currency_symbol', 'add_my_currency_symbol', 10, 2);
+add_filter( 'woocommerce_get_price_html', 'wpa83367_price_html', 100, 2 );
+
 
 // Remove Filters
 remove_filter('the_excerpt', 'wpautop'); // Remove <p> tags from Excerpt altogether
@@ -769,39 +927,8 @@ remove_filter('the_excerpt', 'wpautop'); // Remove <p> tags from Excerpt altoget
     Custom Post Types
 \*------------------------------------*/
 
-// Create 1 Custom Post type for a Demo, called HTML5-Blank
 function create_post_type_html5(){
-    register_taxonomy_for_object_type('category', 'html5-blank'); // Register Taxonomies for Category
-    register_taxonomy_for_object_type('post_tag', 'html5-blank');
-    register_post_type('html5-blank', // Register Custom Post Type
-        array(
-        'labels' => array(
-            'name' => __('HTML5 Blank Custom Post', 'html5blank'), // Rename these to suit
-            'singular_name' => __('HTML5 Blank Custom Post', 'html5blank'),
-            'add_new' => __('Add New', 'html5blank'),
-            'add_new_item' => __('Add New HTML5 Blank Custom Post', 'html5blank'),
-            'edit' => __('Edit', 'html5blank'),
-            'edit_item' => __('Edit HTML5 Blank Custom Post', 'html5blank'),
-            'new_item' => __('New HTML5 Blank Custom Post', 'html5blank'),
-            'view' => __('View HTML5 Blank Custom Post', 'html5blank'),
-            'view_item' => __('View HTML5 Blank Custom Post', 'html5blank'),
-            'search_items' => __('Search HTML5 Blank Custom Post', 'html5blank'),
-            'not_found' => __('No HTML5 Blank Custom Posts found', 'html5blank'),
-            'not_found_in_trash' => __('No HTML5 Blank Custom Posts found in Trash', 'html5blank')
-        ),
-        'public' => true,
-        'hierarchical' => true, // Allows your posts to behave like Hierarchy Pages
-        'has_archive' => true,
-        'supports' => array(
-            'title',
-            'editor',
-            'excerpt',
-            'thumbnail'
-        ), // Go to Dashboard Custom HTML5 Blank post for supports
-        'can_export' => true, // Allows export in Tools > Export
-        'taxonomies' => array(
-            'post_tag',
-            'category'
-        ) // Add Category and Post Tags support
-    ));
+	if ( file_exists( dirname( __FILE__ ) . '/assets/php/post-types.php' ) ) {
+		require_once dirname( __FILE__ ) . '/assets/php/post-types.php';
+	}
 }

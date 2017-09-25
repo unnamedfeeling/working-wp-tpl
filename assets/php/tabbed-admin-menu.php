@@ -2,136 +2,136 @@
 /**
  * CMB Tabbed Theme Options
  *
- * @author    Arushad Ahmed <@dash8x, contact@arushad.org>
- * @link      http://arushad.org/how-to-create-a-tabbed-options-page-for-your-wordpress-theme-using-cmb
+ * @author	Arushad Ahmed <@dash8x, contact@arushad.org>
+ * @link	  http://arushad.org/how-to-create-a-tabbed-options-page-for-your-wordpress-theme-using-cmb
  * @version   0.1.0
  */
 class genericMain_Admin {
 
-    /**
-     * Default Option key
-     * @var string
-     */
-    private $key = 'generic_options_global';
+	/**
+	 * Default Option key
+	 * @var string
+	 */
+	private $key = 'generic_options_global';
 
-    /**
-     * Array of metaboxes/fields
-     * @var array
-     */
-    protected $option_metabox = array();
+	/**
+	 * Array of metaboxes/fields
+	 * @var array
+	 */
+	protected $option_metabox = array();
 
-    /**
-     * Options Page title
-     * @var string
-     */
-    protected $title = '';
+	/**
+	 * Options Page title
+	 * @var string
+	 */
+	protected $title = '';
 
-    /**
-     * Options Tab Pages
-     * @var array
-     */
-    protected $options_pages = array();
+	/**
+	 * Options Tab Pages
+	 * @var array
+	 */
+	protected $options_pages = array();
 
-    /**
-     * Constructor
-     * @since 0.1.0
-     */
-    public function __construct() {
-        // Set our title
-        $this->title = __( 'Глобальные настройки', 'generic' );
-    }
+	/**
+	 * Constructor
+	 * @since 0.1.0
+	 */
+	public function __construct() {
+		// Set our title
+		$this->title = __( 'Глобальные настройки', 'generic' );
+	}
 
-    /**
-     * Initiate our hooks
-     * @since 0.1.0
-     */
-    public function hooks() {
-        add_action( 'admin_init', array( $this, 'init' ) );
-        add_action( 'admin_menu', array( $this, 'add_options_page' ) ); //create tab pages
-    }
+	/**
+	 * Initiate our hooks
+	 * @since 0.1.0
+	 */
+	public function hooks() {
+		add_action( 'admin_init', array( $this, 'init' ) );
+		add_action( 'admin_menu', array( $this, 'add_options_page' ) ); //create tab pages
+	}
 
-    /**
-     * Register our setting tabs to WP
-     * @since  0.1.0
-     */
-    public function init() {
-    	$option_tabs = self::option_fields();
-        foreach ($option_tabs as $index => $option_tab) {
-        	register_setting( $option_tab['id'], $option_tab['id'] );
-        }
-    }
+	/**
+	 * Register our setting tabs to WP
+	 * @since  0.1.0
+	 */
+	public function init() {
+		$option_tabs = self::option_fields();
+		foreach ($option_tabs as $index => $option_tab) {
+			register_setting( $option_tab['id'], $option_tab['id'] );
+		}
+	}
 
-    /**
-     * Add menu options page
-     * @since 0.1.0
-     */
-    public function add_options_page() {
-        $option_tabs = self::option_fields();
-        foreach ($option_tabs as $index => $option_tab) {
-        	if ( $index == 0) {
-        		$this->options_pages[] = add_menu_page( $this->title, $this->title, 'manage_options', $option_tab['id'], array( $this, 'admin_page_display' ) ); //Link admin menu to first tab
-        		add_submenu_page( $option_tabs[0]['id'], $this->title, $option_tab['title'], 'manage_options', $option_tab['id'], array( $this, 'admin_page_display' ) ); //Duplicate menu link for first submenu page
-        	} else {
-        		$this->options_pages[] = add_submenu_page( $option_tabs[0]['id'], $this->title, $option_tab['title'], 'manage_options', $option_tab['id'], array( $this, 'admin_page_display' ) );
-        	}
-        }
-    }
+	/**
+	 * Add menu options page
+	 * @since 0.1.0
+	 */
+	public function add_options_page() {
+		$option_tabs = self::option_fields();
+		foreach ($option_tabs as $index => $option_tab) {
+			if ( $index == 0) {
+				$this->options_pages[] = add_menu_page( $this->title, $this->title, 'manage_options', $option_tab['id'], array( $this, 'admin_page_display' ) ); //Link admin menu to first tab
+				add_submenu_page( $option_tabs[0]['id'], $this->title, $option_tab['title'], 'manage_options', $option_tab['id'], array( $this, 'admin_page_display' ) ); //Duplicate menu link for first submenu page
+			} else {
+				$this->options_pages[] = add_submenu_page( $option_tabs[0]['id'], $this->title, $option_tab['title'], 'manage_options', $option_tab['id'], array( $this, 'admin_page_display' ) );
+			}
+		}
+	}
 
-    /**
-     * Admin page markup. Mostly handled by CMB
-     * @since  0.1.0
-     */
-    public function admin_page_display() {
-    	$option_tabs = self::option_fields(); //get all option tabs
-    	$tab_forms = array();
-        ?>
-        <div class="wrap cmb_options_page <?php echo $this->key; ?>">
-            <h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
+	/**
+	 * Admin page markup. Mostly handled by CMB
+	 * @since  0.1.0
+	 */
+	public function admin_page_display() {
+		$option_tabs = self::option_fields(); //get all option tabs
+		$tab_forms = array();
+		?>
+		<div class="wrap cmb_options_page <?php echo $this->key; ?>">
+			<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
 
-            <!-- Options Page Nav Tabs -->
-            <h2 class="nav-tab-wrapper">
-            	<?php foreach ($option_tabs as $option_tab) :
-            		$tab_slug = $option_tab['id'];
-            		$nav_class = 'nav-tab';
-            		if ( $tab_slug == $_GET['page'] ) {
-            			$nav_class .= ' nav-tab-active'; //add active class to current tab
-            			$tab_forms[] = $option_tab; //add current tab to forms to be rendered
-            		}
-            	?>
-            	<a class="<?php echo $nav_class; ?>" href="<?php menu_page_url( $tab_slug ); ?>"><?php esc_attr_e($option_tab['title']); ?></a>
-            	<?php endforeach; ?>
-            </h2>
-            <!-- End of Nav Tabs -->
+			<!-- Options Page Nav Tabs -->
+			<h2 class="nav-tab-wrapper">
+				<?php foreach ($option_tabs as $option_tab) :
+					$tab_slug = $option_tab['id'];
+					$nav_class = 'nav-tab';
+					if ( $tab_slug == $_GET['page'] ) {
+						$nav_class .= ' nav-tab-active'; //add active class to current tab
+						$tab_forms[] = $option_tab; //add current tab to forms to be rendered
+					}
+				?>
+				<a class="<?php echo $nav_class; ?>" href="<?php menu_page_url( $tab_slug ); ?>"><?php esc_attr_e($option_tab['title']); ?></a>
+				<?php endforeach; ?>
+			</h2>
+			<!-- End of Nav Tabs -->
 
-            <?php foreach ($tab_forms as $tab_form) : //render all tab forms (normaly just 1 form) ?>
-            <div id="<?php esc_attr_e($tab_form['id']); ?>" class="group">
-            	<?php cmb2_metabox_form( $tab_form, $tab_form['id'] ); ?>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <?php
-    }
+			<?php foreach ($tab_forms as $tab_form) : //render all tab forms (normaly just 1 form) ?>
+			<div id="<?php esc_attr_e($tab_form['id']); ?>" class="group">
+				<?php cmb2_metabox_form( $tab_form, $tab_form['id'] ); ?>
+			</div>
+			<?php endforeach; ?>
+		</div>
+		<?php
+	}
 
-    /**
-     * Defines the theme option metabox and field configuration
-     * @since  0.1.0
-     * @return array
-     */
-    public function option_fields() {
+	/**
+	 * Defines the theme option metabox and field configuration
+	 * @since  0.1.0
+	 * @return array
+	 */
+	public function option_fields() {
 
 		// $prefix='generic_';
 
-        // Only need to initiate the array once per page-load
-        if ( ! empty( $this->option_metabox ) ) {
-            return $this->option_metabox;
-        }
+		// Only need to initiate the array once per page-load
+		if ( ! empty( $this->option_metabox ) ) {
+			return $this->option_metabox;
+		}
 
-        $this->option_metabox[] = array(
-            'id'         => 'general_options', //id used as tab page slug, must be unique
-            'title'      => 'Общие',
-            'show_on'    => array( 'key' => 'options-page', 'value' => array( 'general_options' ), ), //value must be same as id
-            'show_names' => true,
-            'fields'     => array(
+		$this->option_metabox[] = array(
+			'id'		 => 'general_options', //id used as tab page slug, must be unique
+			'title'	  => 'Общие',
+			'show_on'	=> array( 'key' => 'options-page', 'value' => array( 'general_options' ), ), //value must be same as id
+			'show_names' => true,
+			'fields'	 => array(
 				array(
 					'name' => __('Главный логотип', 'generic'),
 					'desc' => __('выбрать файл для лого на всех страницах', 'generic'),
@@ -160,14 +160,14 @@ class genericMain_Admin {
 					'type' => 'text',
 				),
 			)
-        );
+		);
 
-        $this->option_metabox[] = array(
-            'id'         => 'social_options',
-            'title'      => 'Адрес, Соцсети, Email',
-            'show_on'    => array( 'key' => 'options-page', 'value' => array( $prefix.'social_options' ), ),
-            'show_names' => true,
-            'fields'     => array(
+		$this->option_metabox[] = array(
+			'id'		 => 'social_options',
+			'title'	  => 'Адрес, Соцсети, Email',
+			'show_on'	=> array( 'key' => 'options-page', 'value' => array( 'social_options' ), ),
+			'show_names' => true,
+			'fields'	 => array(
 				array(
 					'name' => __('Адрес', 'generic'),
 					'desc' => __('Сюда пишем адрес', 'generic'),
@@ -187,19 +187,19 @@ class genericMain_Admin {
 					'type' => 'title'
 				),
 				array(
-					'name' => __('Горячая линия', 'generic'),
-					'desc' => __('вставить телефон для вывода в шапке в разделе "горячая линия"', 'generic'),
+					'name' => __('Телефон в шапке', 'generic'),
+					'desc' => __('вставить телефон для вывода в шапке', 'generic'),
 					'id' => 'hotline',
 					'default' => '',
 					'type' => 'text'
 				),
-				array(
-					'name' => __('Другие телефоны', 'generic'),
-					'desc' => __('выводятся справа от расписания в футере; указать через запятую БЕЗ ПРОБЕЛА', 'generic'),
-					'id' => 'footer_phones',
-					'default' => '',
-					'type' => 'text'
-				),
+				// array(
+				// 	'name' => __('Другие телефоны', 'generic'),
+				// 	'desc' => __('выводятся справа от расписания в футере; указать через запятую БЕЗ ПРОБЕЛА', 'generic'),
+				// 	'id' => 'footer_phones',
+				// 	'default' => '',
+				// 	'type' => 'text'
+				// ),
 				// array(
 				// 	'name' => __('Телефон для футера 1 (главный)', 'generic'),
 				// 	// 'desc' => __('выводятся справа от расписания в футере; указать через запятую БЕЗ ПРОБЕЛА', 'generic'),
@@ -228,33 +228,33 @@ class genericMain_Admin {
 					'type' => 'title'
 				),
 				array(
-					'name' => __('Instagram', 'generic'),
-					'desc' => __('вставить ссылку на страницу', 'generic'),
-					'id' => 'instagram',
-					'default' => '',
-					'type' => 'text'
-				),
-				array(
-					'name' => __('VK.com', 'generic'),
-					'desc' => __('вставить ссылку на страницу', 'generic'),
-					'id' => 'vk',
-					'default' => '',
-					'type' => 'text'
-				),
-				array(
 					'name' => __('Facebook', 'generic'),
 					'desc' => __('вставить ссылку на страницу', 'generic'),
-					'id' => 'facebook',
+					'id' => 'fb',
 					'default' => '',
 					'type' => 'text'
 				),
 				array(
-					'name' => __('Youtube', 'generic'),
+					'name' => __('Twitter', 'generic'),
 					'desc' => __('вставить ссылку на страницу', 'generic'),
-					'id' => 'youtube',
+					'id' => 'tw',
 					'default' => '',
 					'type' => 'text'
 				),
+				array(
+					'name' => __('G+', 'generic'),
+					'desc' => __('вставить ссылку на страницу', 'generic'),
+					'id' => 'gp',
+					'default' => '',
+					'type' => 'text'
+				),
+				// array(
+				// 	'name' => __('Youtube', 'generic'),
+				// 	'desc' => __('вставить ссылку на страницу', 'generic'),
+				// 	'id' => 'youtube',
+				// 	'default' => '',
+				// 	'type' => 'text'
+				// ),
 				array(
 					'name' => __('Email', 'generic'),
 					'desc' => __('Сюда пишем разные email', 'generic'),
@@ -276,14 +276,14 @@ class genericMain_Admin {
 				// 	'type' => 'text'
 				// ),
 			)
-        );
+		);
 
-        $this->option_metabox[] = array(
-            'id'         => 'advanced_options',
-            'title'      => 'Другие настройки',
-            'show_on'    => array( 'key' => 'options-page', 'value' => array( 'advanced_options' ), ),
-            'show_names' => true,
-            'fields'     => array(
+		$this->option_metabox[] = array(
+			'id'		 => 'advanced_options',
+			'title'	  => 'Другие настройки',
+			'show_on'	=> array( 'key' => 'options-page', 'value' => array( 'advanced_options' ), ),
+			'show_names' => true,
+			'fields'	 => array(
 				array(
 					'name' => __('Особый CSS', 'generic'),
 					'desc' => __('Сюда вносим кастомный css.<br><b>Теги <code>&lt;style&gt; и &lt;/style&gt;</code> опускаем - сюда пишем ТОЛЬКО ЧИСТЫЙ CSS</b>', 'generic'),
@@ -306,48 +306,48 @@ class genericMain_Admin {
 					'type' => 'textarea',
 				),
 			)
-        );
+		);
 
-        //insert extra tabs here
+		//insert extra tabs here
 
-        return $this->option_metabox;
-    }
+		return $this->option_metabox;
+	}
 
-    /**
-     * Returns the option key for a given field id
-     * @since  0.1.0
-     * @return array
-     */
-    public function get_option_key($field_id) {
-    	$option_tabs = $this->option_fields();
-    	foreach ($option_tabs as $option_tab) { //search all tabs
-    		foreach ($option_tab['fields'] as $field) { //search all fields
-    			if ($field['id'] == $field_id) {
-    				return $option_tab['id'];
-    			}
-    		}
-    	}
-    	return $this->key; //return default key if field id not found
-    }
+	/**
+	 * Returns the option key for a given field id
+	 * @since  0.1.0
+	 * @return array
+	 */
+	public function get_option_key($field_id) {
+		$option_tabs = $this->option_fields();
+		foreach ($option_tabs as $option_tab) { //search all tabs
+			foreach ($option_tab['fields'] as $field) { //search all fields
+				if ($field['id'] == $field_id) {
+					return $option_tab['id'];
+				}
+			}
+		}
+		return $this->key; //return default key if field id not found
+	}
 
-    /**
-     * Public getter method for retrieving protected/private variables
-     * @since  0.1.0
-     * @param  string  $field Field to retrieve
-     * @return mixed          Field value or exception is thrown
-     */
-    public function __get( $field ) {
+	/**
+	 * Public getter method for retrieving protected/private variables
+	 * @since  0.1.0
+	 * @param  string  $field Field to retrieve
+	 * @return mixed		  Field value or exception is thrown
+	 */
+	public function __get( $field ) {
 
-        // Allowed fields to retrieve
-        if ( in_array( $field, array( 'key', 'fields', 'title', 'options_pages' ), true ) ) {
-            return $this->{$field};
-        }
-        if ( 'option_metabox' === $field ) {
-            return $this->option_fields();
-        }
+		// Allowed fields to retrieve
+		if ( in_array( $field, array( 'key', 'fields', 'title', 'options_pages' ), true ) ) {
+			return $this->{$field};
+		}
+		if ( 'option_metabox' === $field ) {
+			return $this->option_fields();
+		}
 
-        throw new Exception( 'Invalid property: ' . $field );
-    }
+		throw new Exception( 'Invalid property: ' . $field );
+	}
 
 }
 
@@ -359,11 +359,11 @@ $my_Admin->hooks();
  * Wrapper function around cmb_get_option
  * @since  0.1.0
  * @param  string  $key Options array key
- * @return mixed        Option value
+ * @return mixed		Option value
  */
 function genericMain_option( $key = '' ) {
-    global $my_Admin;
-    return cmb2_get_option( $my_Admin->get_option_key($key), $key );
+	global $my_Admin;
+	return cmb2_get_option( $my_Admin->get_option_key($key), $key );
 }
 
 // theme config admin page
@@ -464,58 +464,58 @@ class generic_Admin {
 		// hook in our save notices
 		add_action( "cmb2_save_options-page_fields_{$this->metabox_id}", array( $this, 'settings_notices' ), 10, 2 );
 		$cmb = new_cmb2_box( array(
-			'title'         => 'Филиалы',
-			'id'         => $this->metabox_id,
-			'hookup'     => false,
+			'title'		 => 'Филиалы',
+			'id'		 => $this->metabox_id,
+			'hookup'	 => false,
 			'cmb_styles' => true,
-			'show_on'    => array(
+			'show_on'	=> array(
 				// These are important, don't remove
 				'key'   => 'options-page',
 				'value' => array( $this->key, )
 			),
 		) );
 		$cmb->add_field(array(
-		    'name' => __( 'Центральный офис', 'generic' ),
-		    'id'   => 'main_tel',
-		    'type' => 'text',
+			'name' => __( 'Центральный офис', 'generic' ),
+			'id'   => 'main_tel',
+			'type' => 'text',
 			// 'repeatable' => true, // Repeatable fields are supported w/in repeatable groups (for most types)
 		) );
 		$cmb->add_field(array(
-		    'name' => __( 'Отдел продаж', 'generic' ),
-		    'id'   => 'main_sales',
-		    'type' => 'text',
+			'name' => __( 'Отдел продаж', 'generic' ),
+			'id'   => 'main_sales',
+			'type' => 'text',
 			// 'repeatable' => true, // Repeatable fields are supported w/in repeatable groups (for most types)
 		) );
 		$group_field_id = $cmb->add_field( array(
-		    'id'          => $prefix.'branches',
-		    'type'        => 'group',
-		    'description' => __( 'Адреса и описания филиалов', 'generic' ),
-		    // 'repeatable'  => false, // use false if you want non-repeatable group
-		    'options'     => array(
-		        'group_title'   => __( 'Филиал {#}', 'generic' ), // since version 1.1.4, {#} gets replaced by row number
-		        'add_button'    => __( 'Добавить еще филиал', 'generic' ),
-		        'remove_button' => __( 'Удалить филиал', 'generic' ),
-		        'sortable'      => true, // beta
-		        // 'closed'     => true, // true to have the groups closed by default
-		    ),
+			'id'		  => $prefix.'branches',
+			'type'		=> 'group',
+			'description' => __( 'Адреса и описания филиалов', 'generic' ),
+			// 'repeatable'  => false, // use false if you want non-repeatable group
+			'options'	 => array(
+				'group_title'   => __( 'Филиал {#}', 'generic' ), // since version 1.1.4, {#} gets replaced by row number
+				'add_button'	=> __( 'Добавить еще филиал', 'generic' ),
+				'remove_button' => __( 'Удалить филиал', 'generic' ),
+				'sortable'	  => true, // beta
+				// 'closed'	 => true, // true to have the groups closed by default
+			),
 		) );
 		// Id's for group's fields only need to be unique for the group. Prefix is not needed.
 		$cmb->add_group_field( $group_field_id, array(
-		    'name' => __( 'Название филиала', 'generic' ),
-		    'id'   => 'branch_title',
-		    'type' => 'text',
-		    // 'repeatable' => true, // Repeatable fields are supported w/in repeatable groups (for most types)
+			'name' => __( 'Название филиала', 'generic' ),
+			'id'   => 'branch_title',
+			'type' => 'text',
+			// 'repeatable' => true, // Repeatable fields are supported w/in repeatable groups (for most types)
 		) );
 		$cmb->add_group_field( $group_field_id, array(
-		    'name' => __( 'Название филиала - для страницы контактов', 'generic' ),
-		    'id'   => 'branch_title_full',
-		    'type' => 'text',
-		    // 'repeatable' => true, // Repeatable fields are supported w/in repeatable groups (for most types)
+			'name' => __( 'Название филиала - для страницы контактов', 'generic' ),
+			'id'   => 'branch_title_full',
+			'type' => 'text',
+			// 'repeatable' => true, // Repeatable fields are supported w/in repeatable groups (for most types)
 		) );
 		$cmb->add_group_field( $group_field_id, array(
-		    'name' => __( 'Телефон филиала', 'generic' ),
-		    'id'   => 'branch_tel',
-		    'type' => 'text',
+			'name' => __( 'Телефон филиала', 'generic' ),
+			'id'   => 'branch_tel',
+			'type' => 'text',
 			'repeatable' => true, // Repeatable fields are supported w/in repeatable groups (for most types)
 		) );
 	}
@@ -538,7 +538,7 @@ class generic_Admin {
 	 * Public getter method for retrieving protected/private variables
 	 * @since  0.1.0
 	 * @param  string  $field Field to retrieve
-	 * @return mixed          Field value or exception is thrown
+	 * @return mixed		  Field value or exception is thrown
 	 */
 	public function __get( $field ) {
 		// Allowed fields to retrieve
@@ -560,7 +560,7 @@ function generic_admin() {
  * Wrapper function around cmb2_get_option
  * @since  0.1.0
  * @param  string  $key Options array key
- * @return mixed        Option value
+ * @return mixed		Option value
  */
 function generic_get_option( $key = '' ) {
 	return cmb2_get_option( generic_admin()->key, $key );
