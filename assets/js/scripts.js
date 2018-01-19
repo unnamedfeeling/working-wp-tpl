@@ -2,18 +2,19 @@
 	"use strict";
 
 	var ajaxPost=function(target, type, container, func, quant, opts){
-		// console.log(target);
+		// console.log(document.querySelector(container).dataset.page);
 		var q=(typeof quant!=='undefined') ? quant : 4,
-			cont=document.getElementById(container),
+			cont=(document.getElementById(container) !== null)?document.getElementById(container):document.querySelector(container),
 			page = parseInt(cont.dataset.page),
+			perpage = (typeof opts!=='undefined' && typeof opts.perpage!=='undefined')?opts.perpage : null,
 			// total = parseInt(swimsuitsContainer.dataset.total),
 			cat = (!isNaN(cont.dataset.cat))?parseInt(cont.dataset.cat):'',
 			catid = (!isNaN($(target).get(0).dataset.cat))?parseInt($(target).get(0).dataset.cat):'',
 			tagid = (!isNaN($(target).get(0).dataset.tagid))?parseInt($(target).get(0).dataset.tagid):'',
 			tagslug = ($(target).get(0).dataset.tagslug!=='')?$(target).get(0).dataset.tagslug:'',
 			// data={p: page, t: total, c: cat, pt: 'product'},
-			data={p: page, c: ((cat!=='') ? cat : catid), pt: type, q: q, t: tagid},
-			postcount=parseInt($('#'+container).find('.grid-item').length),
+			data={p: page, c: ((cat!=='') ? cat : catid), pt: type, q: q, t: tagid, ppg: perpage},
+			postcount=parseInt($(container).find('.grid-item').length),
 			excl=(typeof opts!=='undefined' && typeof opts.excl!=='undefined')?opts.excl : null;
 		if (data.c=='') {
 			delete data.c;
@@ -30,66 +31,62 @@
 				action: func,
 				params: data
 			},
-			beforeSend: function(){
-				if(!$(target).hasClass('js-filterCat')&&!$(target).hasClass('js-filterTag')){
-					$(target).attr('disabled', 'disabled').css('opacity', '0.7');
-				}
-
-			},
+			// beforeSend: function(){
+			// 	if(!$(target).hasClass('js-filterCat')&&!$(target).hasClass('js-filterTag')){
+			// 		$(target).attr('disabled', 'disabled').css('opacity', '0.7');
+			// 	}
+	        //
+			// },
 			success: function (data) {
-				if($('#'+container).find('.noposts').length){
-					$('#'+container).find('.noposts').remove();
+				console.log(data);
+				if($(container).find('.noposts').length){
+					$(container).find('.noposts').remove();
 				}
-				$('#archiveMoreSwimsuits').fadeIn(500);
-				var h=$swgrid.innerHeight(),
-					content=$.parseHTML(data.content),
+				$(container).fadeIn(500);
+				var content=$.parseHTML(data.content),
 					c;
 				if ($(content).find('.noposts').length) {
-					$('#archiveMoreSwimsuits').fadeOut(300);
+					$(container).fadeOut(300);
 				}
-				// console.log(data);
-				// console.log(data.content);
-				$('#'+container).css('opacity', '0.1');
+				$(container).css('opacity', '0.1');
 				// var content=$.parseHTML(data.content.replace('/data-src/g', 'src'));
 				postcount+=$(content).find('.grid-item').length;
-				$swgrid.append($(content)).isotope('appended', $(content)).isotope('layout');
-				setTimeout(function(){
-					$swgrid.append($(content)).imagesLoaded(function(){
-						// $swgrid.isotope('appended', $(content) ).isotope('layout');
-						// console.log(new Date());
-						$swgrid.isotope('layout');
-					});
-				}, 300);
+				$(container).append(content);
 
-				$('#'+container).css('opacity', '1');
+				$(container).css('opacity', '1');
 				// swimsuitsContainer.dataset.page++;
-				$('#'+container).get(0).dataset.page++;
+				$(container).get(0).dataset.page++;
 				if (typeof data.pids!=='undefined') {
 					// console.log(data.pids);
-					// console.log($('#'+container).data('excl'));
+					// console.log($(container).data('excl'));
 					// console.log(container);
-					var ex_ids=String(data.pids)+String($('#'+container).get(0).dataset.excl);
+					var ex_ids=String(data.pids)+String($(container).get(0).dataset.excl);
 					// console.log(ex_ids);
-					$('#'+container).removeAttr('data-excl');
-					$('#'+container).attr('data-excl', ex_ids);
+					$(container).removeAttr('data-excl');
+					$(container).attr('data-excl', ex_ids);
+					if (ex_ids.split(',').length==parseInt(data.total_posts)) {
+						$(target).fadeOut(500, function() {
+							//Stuff to do *after* the animation takes place
+						})
+					}
 				}
 				var totalposts=parseInt(data.total_posts);
 				// console.log('totalposts:'+totalposts);
 				// console.log('postcount:'+postcount);
 				// console.log(parseInt(postcount)>(parseInt(totalposts)-1));
-				if(!$(target).hasClass('js-filterCat')&&!$(target).hasClass('js-filterTag')){
-					if(parseInt(postcount)>(parseInt(totalposts)-1)){
-						$(target).addClass('hidden').fadeOut(300);
-					} else {
-						$(target).removeAttr('disabled').css('opacity', '1');
-					}
-				}
+				// if(!$(target).hasClass('js-filterCat')&&!$(target).hasClass('js-filterTag')){
+				// 	if(parseInt(postcount)>(parseInt(totalposts)-1)){
+				// 		$(target).addClass('hidden').fadeOut(300);
+				// 	} else {
+				// 		$(target).removeAttr('disabled').css('opacity', '1');
+				// 	}
+				// }
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				alert(xhr.responseText);
 			}
 		});
-	};
+		};
 	$(document).on('click', '#mainMoreSwimsuits', function(event){
 		var opts={excl:swimsuitsContainer.dataset.excl},
 			quant=JSON.parse("[" + opts.excl + "]").length;

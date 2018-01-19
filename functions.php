@@ -746,16 +746,19 @@ function generic_news_like() {
 
 // ajax get posts for main page
 function generic_ajax_posts(){
-	// global $post;
+	global $options, $tpl;
+	$tpl=$options['tpld'];
+
 	$params=$_POST;
 	// die(json_encode( $params ));
 	$offset=$params['params']['p']*((!empty($params['params']['q'])) ? $params['params']['q'] : 4);
+	$perpage=(!empty($params['params']['ppg'])) ? $params['params']['ppg'] : 4;
 	$post_type=$params['params']['pt'];
 	$catid=(!empty($params['params']['cat']))?$params['params']['cat']:null;
 	$excl=(!empty($params['params']['e']))?explode(',', $params['params']['e']):array();
 	$args=array(
 		'post_type'=>$post_type,
-		'posts_per_page'=>4,
+		'posts_per_page'=>$perpage,
 		'offset'=>(empty($excl))?$offset:0,
 		'post__not_in'=> $excl
 	);
@@ -774,7 +777,7 @@ function generic_ajax_posts(){
 	}
 	if ($posts->have_posts()): while ($posts->have_posts()) : $posts->the_post();
 		$ret_ids.=(!empty($excl))?get_the_ID().',':null;
-		get_template_part('loop', 'swim_grid-el');
+		get_template_part( 'assets/php/parts/loop', 'course' );
 	endwhile;
 	else : ?>
 		<div class="noposts grid-item design fullwidth" style="width:100%;font-size:2rem;font-weight:bold;"><?=(empty($offset)||$offset==1)?__( 'No swimsuits!', 'generic' ):__( 'No more swimsuits!', 'generic' )?></div>
