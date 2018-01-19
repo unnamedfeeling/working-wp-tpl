@@ -748,31 +748,115 @@ function generic_news_like() {
 function generic_ajax_posts(){
 	// global $post;
 	$params=$_POST;
-	$offset=$params['params']['p']*8;
+	// die(json_encode( $params ));
+	$offset=$params['params']['p']*((!empty($params['params']['q'])) ? $params['params']['q'] : 4);
+	$post_type=$params['params']['pt'];
+	$catid=(!empty($params['params']['cat']))?$params['params']['cat']:null;
+	$excl=(!empty($params['params']['e']))?explode(',', $params['params']['e']):array();
 	$args=array(
-		'post_type'=>'post',
-		'posts_per_page'=>8,
-		'offset'=>$offset
+		'post_type'=>$post_type,
+		'posts_per_page'=>4,
+		'offset'=>(empty($excl))?$offset:0,
+		'post__not_in'=> $excl
 	);
-	$news=new WP_Query($args);
+	if(!empty($catid)){
+		$args['tax_query']=array(
+			array(
+				'taxonomy'=>'product_cat',
+				'terms'=>array($catid)
+			)
+		);
+	}
+	$posts=new WP_Query($args);
 	ob_start();
-	if ($news->have_posts()): while ($news->have_posts()) : $news->the_post();
-		get_template_part('loop', 'post');
+	if (!empty($excl)) {
+		$ret_ids='';
+	}
+	if ($posts->have_posts()): while ($posts->have_posts()) : $posts->the_post();
+		$ret_ids.=(!empty($excl))?get_the_ID().',':null;
+		get_template_part('loop', 'swim_grid-el');
 	endwhile;
 	else : ?>
-		<div class="section-title section-title--news js-animation-up animated fadeInUp" style="position:absolute;bottom:-135px;left:0;right:0">Больше нет новостей. Приходите позже!</div>
+		<div class="noposts grid-item design fullwidth" style="width:100%;font-size:2rem;font-weight:bold;"><?=(empty($offset)||$offset==1)?__( 'No swimsuits!', 'generic' ):__( 'No more swimsuits!', 'generic' )?></div>
 	<?php endif;
 	// die(json_encode($args));
 	$cont=ob_get_clean();
-	$cont=str_replace('data-src', 'src', $cont);
+	// $cont=str_replace('data-src', 'src', $cont);
+	// $response=[
+	// 	'offset' => $offset,
+	// 	'total_posts' => wp_count_posts('post'),
+	// 	'content' => $cont
+	// ];
+	if (!empty($excl)) {
+		$response['pids']=$ret_ids;
+	}
+	$response['offset']=$offset;
+	$response['total_posts']=wp_count_posts($post_type)->publish;
+	$response['content']=$cont;
+	// $response['params']=$params;
+	die(json_encode($response));
+}
+
+// ajax get posts for main page
+function generic_ajax_filterPosts(){
+	// global $post;
+	// wp_reset_query();
+	$params=$_POST;
+	$post_type=$params['params']['pt'];
+	// $catid=(!empty($params['params']['cat']))?$params['params']['cat']:$params['params']['c'];
+	// $tagid=(!empty($params['params']['tag']))?$params['params']['tag']:$params['params']['t'];
+	$catid=(empty($params['params']['c']))?null:(int) $params['params']['c'];
+	$tagid=(empty($params['params']['t']))?null:(int) $params['params']['t'];
+	$args=array(
+		'post_type'=>$post_type,
+		'posts_per_page'=>12,
+		'post_status'=>'publish',
+		// 'offset'=>0
+	);
+	if(!empty($catid)){
+		$response['tax_type']='cat';
+		$args['tax_query']=array(
+			array(
+				'taxonomy'=>'product_cat',
+				'field' => 'id',
+				'terms'=>array((int) $catid)
+			)
+		);
+	}
+	if(!empty($tagid)){
+		$response['tax_type']='tag';
+		$args['tax_query']=array(
+			array(
+				'taxonomy'=>'product_tag',
+				'field' => 'id',
+				'terms'=>(int) $tagid
+			)
+		);
+		// $args['product_tag']=$tagid;
+	}
+	$posts=new WP_Query($args);
+	ob_start();
+	if ($posts->have_posts()): while ($posts->have_posts()) : $posts->the_post();
+		get_template_part('loop', 'swim_grid-gen');
+	endwhile;
+	else : ?>
+		<div class="noposts grid-item design fullwidth" style="width:100%;font-size:2rem;font-weight:bold;"><?=(empty($offset)||$offset==1)?__( 'No swimsuits!', 'generic' ):__( 'No more swimsuits!', 'generic' )?></div>
+	<?php endif;
+	// die(json_encode($args));
+	$cont=ob_get_clean();
+	// $cont=str_replace('data-src', 'src', $cont);
 	// $response=[
 	// 	'offset' => $offset,
 	// 	'total_posts' => wp_count_posts('post'),
 	// 	'content' => $cont
 	// ];
 	$response['offset']=$offset;
-	$response['total_posts']=wp_count_posts('post');
+	$response['total_posts']=wp_count_posts($post_type)->publish;
 	$response['content']=$cont;
+	// $response['query']=$posts;
+	$response['args']=$args;
+	$response['post']=$params;
+	$response['type']='generic_ajax_filterPosts';
 	die(json_encode($response));
 }
 
@@ -783,6 +867,68 @@ function generic_ajax_cart(){
 	echo WC()->cart->get_cart_contents_count();
 	$response['content']=ob_get_clean();
 	die(json_encode($response));
+}
+
+
+// ajax add to cart
+function generic_ajax_add_to_cart() {
+	global $woocommerce;
+	$params=$_POST['params'];
+
+	// die(json_encode( $params ));
+
+	$prid = $params['prodid'];
+	$qty = $params['quant'];
+	$var = (!empty($params['variation'])) ? $params['variation'] : null;
+	$pass = apply_filters( 'woocommerce_add_to_cart_validation', true, $prid, $qty );
+	$pr_stat = get_post_status( $prid );
+	$res=array();
+	// $res['id']=$prid;
+	// $res['qty']=$qty;
+	// $res['pass']=$pass;
+	// $res['stat']=$pr_stat;
+	$product=new WC_Product($prid);
+	// wp_send_json_success( $res );
+
+	if ( $pass && WC()->cart->add_to_cart( $prid, $qty, $var ) && 'publish' === $pr_stat ) {
+		// ob_start();
+		do_action( 'woocommerce_ajax_added_to_cart', $prid );
+		$res['result']=wc_add_to_cart_message( $prid, true, true );
+		$ttl='';
+		if($var==0||$var==''){
+			$ttl=$product->get_name();
+		} else {
+			$variations=new WC_Product_Variation($var);
+			$res['prod']=json_encode( $variations );
+			$res['attr']=json_encode($variations->get_attributes());
+			$terms='';
+			$i=1;
+			$c=count($variations->get_attributes());
+			foreach ($variations->get_attributes() as $key => $value) {
+				// $terms.='$key='.$key.', $value='.$value.', $pa_pos='.strpos($key,'pa_');
+				$varname=(strpos($key,'pa_')&&strpos($key,'pa_')>=0)?get_term_by( 'slug', $value, $key )->name : get_term_by( 'slug', $value, 'pa_'.$key )->name;
+				$terms.=(!empty($varname))?$varname:get_term_by( 'slug', $value, $key )->name;
+				$terms.=($i<$c) ? ', ' : null;
+				$i++;
+			}
+
+			$res['title']=json_encode($terms);
+			$ttl=$product->get_name().' ('.$terms.')';
+		}
+		// $res['html']='<div id="simpleModal" class="cartmodal"><div class="fade"></div><div class="modal-window small"><button class="close js-close" title="'.__( 'Close', 'generic' ).'">&times;</button><h3>'.__( 'Your product has been added to cart!', 'generic' ).'</h3><p>'.__( 'Product', 'generic' ).' - '.$ttl.', '.$qty.' '.__( 'pcs', 'generic' ).'.</p>
+		// <p>'.__( 'Go to', 'generic' ).' <a href="'.$woocommerce->cart->get_cart_url().'" target="_blank">'.__( 'cart', 'generic' ).'</a>?</p><p><a href="'.$woocommerce->cart->get_checkout_url().'" target="_blank">'.__( 'Checkout', 'generic' ).'</a>?</p></div></div>';
+		$res['html']='<div class="cartmodal-window small"><h3>'.__( 'Your product has been added to cart!', 'generic' ).'</h3><p>'.__( 'Product', 'generic' ).' - '.$ttl.', '.$qty.' '.__( 'pcs', 'generic' ).'.</p>
+		<p>'.__( 'Go to', 'generic' ).' <a href="'.wc_get_cart_url().'" target="_blank">'.__( 'cart', 'generic' ).'</a>?</p><p><a href="'.wc_get_checkout_url().'" target="_blank">'.__( 'Checkout', 'generic' ).'</a>?</p></div>';
+		wp_send_json_success( $res );
+	} else {
+		// If there was an error adding to the cart, redirect to the product page to show any errors
+		$res['result'] = array(
+			'error'	   => true,
+			'product_url' => apply_filters( 'woocommerce_cart_redirect_after_error', get_permalink( $prid ), $prid )
+		);
+		wp_send_json_error( $res );
+	}
+	die();
 }
 
 // callback for diltering html tags in admin input
