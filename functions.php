@@ -147,6 +147,16 @@ function generic_globals(){
 	);
 }
 
+// Register HTML5 Blank Navigation
+function register_generic_menu(){
+    register_nav_menus(array( // Using array to specify more menus if needed
+        'header-menu' => __('Главное меню', 'generic'), // Main Navigation
+        'footer-menu1' => __('Меню футера 1', 'generic'), // Sidebar Navigation
+        'footer-menu2' => __('Меню футера 2', 'generic'), // Sidebar Navigation
+        // 'extra-menu' => __('Extra Menu', 'generic') // Extra Navigation if needed (duplicate as many as you need!)
+    ));
+}
+
 // HTML5 Blank navigation
 function generic_nav(){
     wp_nav_menu(
@@ -497,16 +507,6 @@ function disable_wp_emojicons() {
 
   // filter to remove TinyMCE emojis
   // add_filter( 'tiny_mce_plugins', 'disable_emojicons_tinymce' );
-}
-
-// Register HTML5 Blank Navigation
-function register_generic_menu(){
-    register_nav_menus(array( // Using array to specify more menus if needed
-        'header-menu' => __('Главное меню', 'generic'), // Main Navigation
-        'footer-menu1' => __('Меню футера 1', 'generic'), // Sidebar Navigation
-        'footer-menu2' => __('Меню футера 2', 'generic'), // Sidebar Navigation
-        // 'extra-menu' => __('Extra Menu', 'generic') // Extra Navigation if needed (duplicate as many as you need!)
-    ));
 }
 
 // Remove the <div> surrounding the dynamic navigation to cleanup markup
