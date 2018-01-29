@@ -23,6 +23,23 @@ function generic_metaboxes() {
 	// $pt=get_current_screen()->post_type;
 	// check for a template type
 	$cmb_main = new_cmb2_box( array(
+		'id'			=> 'modules_metabox',
+		'title'		 => __( 'Условия вывода блоков', 'cmb2' ),
+		'object_types'  => array( 'page', ), // Post type
+		'show_on'	   => array( 'key' => 'page-template', 'value' => 'tpl-main.php' ),
+		'context'	   => 'normal',
+		'priority'	  => 'high',
+		'show_names'	=> true, // Show field names on the left
+		// 'cmb_styles' => false, // false to disable the CMB stylesheet
+		'closed'	 => true, // Keep the metabox closed by default
+	) );
+	$cmb_main->add_field( array(
+		'name' => __( 'Спрятать блок "Главный слайдер"?', 'spdaks' ),
+		'id'   => $p.'mod_slider',
+		'type' => 'checkbox'
+	) );
+	
+	$cmb_main = new_cmb2_box( array(
 		'id'            => 'main_metabox',
 		'title'         => __( 'Данные для этой страницы', 'cmb2' ),
 		'object_types'  => array( 'page', ), // Post type
