@@ -134,10 +134,23 @@ class genericMain_Admin {
 			'fields'	 => array(
 				array(
 					'name' => __('Главный логотип', 'generic'),
-					'desc' => __('выбрать файл для лого на всех страницах', 'generic'),
+					'desc' => __('выбрать файл для лого в шапке на всех страницах', 'generic'),
 					'id' => 'header_logo', //each field id must be unique
 					'default' => '',
 					'type' => 'file',
+					'query_args' => array(
+						'type' => array('image/gif', 'image/png', 'image/svg')
+					)
+				),
+				array(
+					'name' => __('Логотип для футера', 'generic'),
+					'desc' => __('выбрать файл для лого в футере на всех страницах', 'generic'),
+					'id' => 'footer_logo', //each field id must be unique
+					'default' => '',
+					'type' => 'file',
+					'query_args' => array(
+						'type' => array('image/gif', 'image/png', 'image/svg')
+					)
 				),
 				array(
 					'name' => __('Время работы', 'generic'),
