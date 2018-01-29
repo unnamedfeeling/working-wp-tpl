@@ -1,4 +1,6 @@
-<?php global $options; ?>
+<?php  global $options, $tpl, $p;
+$tpl=$options['tpld'];
+$p=$options['prfx']; ?>
 <!doctype html>
 <html <?php language_attributes(); ?> class="no-js">
 	<head>
