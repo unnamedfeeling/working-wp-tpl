@@ -8,9 +8,6 @@
 		<?php
 		global $options;
 		wp_footer();
-		if(!empty($options['advd']['custom_css'])){
-			echo ($options['advd']['custom_css']!==' ') ? '<style>'.htmlspecialchars_decode($options['advd']['custom_css']).'</style>' : null;
-		}
 		if(!empty($options['advd']['custom_js'])){
 			echo ($options['advd']['custom_js']!==' ') ? '<script>'.htmlspecialchars_decode($options['advd']['custom_js']).'</script>' : null;
 		}
