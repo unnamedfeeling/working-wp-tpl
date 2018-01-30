@@ -4,18 +4,18 @@
 register_post_type('advantages', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('Advantages', 'startime'), // Rename these to suit
-		'singular_name' => __('Advantage', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Advantages', 'generic'), // Rename these to suit
+		'singular_name' => __('Advantage', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
@@ -36,18 +36,18 @@ register_post_type('advantages', // Register Custom Post Type
 register_post_type('teacher', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('Teachers', 'startime'), // Rename these to suit
-		'singular_name' => __('Teacher', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Teachers', 'generic'), // Rename these to suit
+		'singular_name' => __('Teacher', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
@@ -69,18 +69,18 @@ register_post_type('teacher', // Register Custom Post Type
 register_post_type('artist', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('Artists', 'startime'), // Rename these to suit
-		'singular_name' => __('Artist', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Artists', 'generic'), // Rename these to suit
+		'singular_name' => __('Artist', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
@@ -102,18 +102,18 @@ register_post_type('artist', // Register Custom Post Type
 register_post_type('schoolcourses', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('School courses', 'startime'), // Rename these to suit
-		'singular_name' => __('School course', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('School courses', 'generic'), // Rename these to suit
+		'singular_name' => __('School course', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => true, // Allows your posts to behave like Hierarchy Pages
@@ -136,18 +136,18 @@ register_post_type('schoolcourses', // Register Custom Post Type
 register_post_type('team', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('Team members', 'startime'), // Rename these to suit
-		'singular_name' => __('Team member', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Team members', 'generic'), // Rename these to suit
+		'singular_name' => __('Team member', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
@@ -169,18 +169,18 @@ register_post_type('team', // Register Custom Post Type
 register_post_type('photo', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('Photos', 'startime'), // Rename these to suit
-		'singular_name' => __('Photo', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Photos', 'generic'), // Rename these to suit
+		'singular_name' => __('Photo', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
@@ -201,18 +201,18 @@ register_post_type('photo', // Register Custom Post Type
 register_post_type('video', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('Videos', 'startime'), // Rename these to suit
-		'singular_name' => __('Video', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Videos', 'generic'), // Rename these to suit
+		'singular_name' => __('Video', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
@@ -233,18 +233,18 @@ register_post_type('video', // Register Custom Post Type
 register_post_type('kursi', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('Courses', 'startime'), // Rename these to suit
-		'singular_name' => __('Course', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Courses', 'generic'), // Rename these to suit
+		'singular_name' => __('Course', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
@@ -266,18 +266,18 @@ register_post_type('kursi', // Register Custom Post Type
 // register_post_type('program', // Register Custom Post Type
 //	 array(
 //	 'labels' => array(
-//		 'name' => __('Обучающая программа', 'startime'), // Rename these to suit
-//		 'singular_name' => __('Обучающая программа', 'startime'),
-//		 'add_new' => __('Add', 'startime'),
-//		 'add_new_item' => __('Add element', 'startime'),
-//		 'edit' => __('Edit', 'startime'),
-//		 'edit_item' => __('Edit element', 'startime'),
-//		 'new_item' => __('New element', 'startime'),
-//		 'view' => __('Review', 'startime'),
-//		 'view_item' => __('Review element', 'startime'),
-//		 'search_items' => __('Search', 'startime'),
-//		 'not_found' => __('Не найдены elementы', 'startime'),
-//		 'not_found_in_trash' => __('Не найден ни один element в корзине', 'startime')
+//		 'name' => __('Обучающая программа', 'generic'), // Rename these to suit
+//		 'singular_name' => __('Обучающая программа', 'generic'),
+//		 'add_new' => __('Add', 'generic'),
+//		 'add_new_item' => __('Add element', 'generic'),
+//		 'edit' => __('Edit', 'generic'),
+//		 'edit_item' => __('Edit element', 'generic'),
+//		 'new_item' => __('New element', 'generic'),
+//		 'view' => __('Review', 'generic'),
+//		 'view_item' => __('Review element', 'generic'),
+//		 'search_items' => __('Search', 'generic'),
+//		 'not_found' => __('Не найдены elementы', 'generic'),
+//		 'not_found_in_trash' => __('Не найден ни один element в корзине', 'generic')
 //	 ),
 //	 'public' => true,
 //	 'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
@@ -299,18 +299,18 @@ register_post_type('kursi', // Register Custom Post Type
 register_taxonomy('type', 'review',
 	array(
 	'labels' => array(
-		'name' => __('Types', 'startime'), // Rename these to suit
-		'singular_name' => __('Type', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Types', 'generic'), // Rename these to suit
+		'singular_name' => __('Type', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true
 ));
@@ -318,18 +318,18 @@ register_taxonomy_for_object_type('type', 'review');
 register_post_type('review', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('Reviews', 'startime'), // Rename these to suit
-		'singular_name' => __('Review', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Reviews', 'generic'), // Rename these to suit
+		'singular_name' => __('Review', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
@@ -352,18 +352,18 @@ register_post_type('review', // Register Custom Post Type
 register_post_type('project', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('Projects', 'startime'), // Rename these to suit
-		'singular_name' => __('Project', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Projects', 'generic'), // Rename these to suit
+		'singular_name' => __('Project', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
@@ -388,18 +388,18 @@ register_post_type('project', // Register Custom Post Type
 register_post_type('production', // Register Custom Post Type
 	array(
 	'labels' => array(
-		'name' => __('Production', 'startime'), // Rename these to suit
-		'singular_name' => __('Production', 'startime'),
-		'add_new' => __('Add', 'startime'),
-		'add_new_item' => __('Add element', 'startime'),
-		'edit' => __('Edit', 'startime'),
-		'edit_item' => __('Edit element', 'startime'),
-		'new_item' => __('New element', 'startime'),
-		'view' => __('Review', 'startime'),
-		'view_item' => __('Review element', 'startime'),
-		'search_items' => __('Search', 'startime'),
-		'not_found' => __('Nothing found', 'startime'),
-		'not_found_in_trash' => __('Nothing found in trash', 'startime')
+		'name' => __('Production', 'generic'), // Rename these to suit
+		'singular_name' => __('Production', 'generic'),
+		'add_new' => __('Add', 'generic'),
+		'add_new_item' => __('Add element', 'generic'),
+		'edit' => __('Edit', 'generic'),
+		'edit_item' => __('Edit element', 'generic'),
+		'new_item' => __('New element', 'generic'),
+		'view' => __('Review', 'generic'),
+		'view_item' => __('Review element', 'generic'),
+		'search_items' => __('Search', 'generic'),
+		'not_found' => __('Nothing found', 'generic'),
+		'not_found_in_trash' => __('Nothing found in trash', 'generic')
 	),
 	'public' => true,
 	'hierarchical' => false, // Allows your posts to behave like Hierarchy Pages
