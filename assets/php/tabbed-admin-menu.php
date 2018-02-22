@@ -312,6 +312,15 @@ class genericMain_Admin {
 					'type' => 'textarea',
 				),
 				array(
+					'name' => __('Особый JS, который нужно выводить с тегом "script"', ' generic'),
+					'desc' => __('Пиксели, метрики и другие важные js-вещи. Будет выводиться где надо и как надо.<br><b>Теги <code>&lt;script&gt; и &lt;/script&gt;</code> указываем тут - это нужно для тех случаев, когда нужно задать код, который подключает сторонний файл напрямую</b>. НУЖНО ДОБАВЛЯТЬ АТРИБУТ <b>async="async"</b> К ТАКОМУ КОДУ ОБЯЗАТЕЛЬНО', ' generic'),
+					'id' => 'custom_js_tag',
+					'default' => '',
+					'type' => 'textarea',
+					// 'sanitization_cb' => 'unfilter_all',
+					// 'escape_cb' => 'unescape_all'
+				),
+				array(
 					'name' => __('Особый noscript', 'generic'),
 					'desc' => __('Если к коду идет дополнение в тегах noscript.<br><b>Теги <code>&lt;noscript&gt; и &lt;/noscript&gt;</code> опускаем</b>', 'generic'),
 					'id' => 'custom_noscript',

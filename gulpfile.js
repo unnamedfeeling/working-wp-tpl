@@ -1,3 +1,5 @@
+// npm link gulp gulp-less gulp-error-notifier gulp-rename gulp-concat gulp-minify-css gulp-uglify-es
+
 var gulp = require('gulp'),
 	less = require('gulp-less'),
 	errorNotifier = require('gulp-error-notifier'),

@@ -54,7 +54,7 @@ register_post_type('teacher', // Register Custom Post Type
 	'has_archive' => false,
 	'supports' => array(
 		'title',
-		// 'editor',
+		'editor',
 		'thumbnail'
 	), // Go to Dashboard Custom HTML5 Blank post for supports
 	'can_export' => true, // Allows export in Tools > Export

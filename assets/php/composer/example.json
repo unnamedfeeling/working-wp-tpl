@@ -34,6 +34,22 @@
 	{
 		"type": "vcs",
 		"url": "https://github.com/unnamedfeeling/working-wp-tpl"
+	},
+	{
+		"type": "vcs",
+		"url": "https://github.com/unnamedfeeling/wpfilemanager-mod"
+	},
+	{
+		"type": "vcs",
+		"url": "https://github.com/CMB2/CMB2"
+	},
+	{
+		"type": "vcs",
+		"url": "https://github.com/CMB2/cmb2-attached-posts"
+	},
+	{
+		"type": "vcs",
+		"url": "https://github.com/alexis-magina/cmb2-field-post-search-ajax"
 	}
   ],
   "require": {
@@ -59,6 +75,10 @@
 	"wpackagist-plugin/redirection": "*",
 	"wpackagist-plugin/breadcrumb-navxt": "*",
 	"wpackagist-plugin/bootstrap-3-shortcodes": "*",
+	"unnamedfeeling/wpfilemanager-mod" : "*",
+	"CMB2/CMB2" : "*",
+	"CMB2/cmb2-attached-posts" : "*",
+	"alexis-magina/cmb2-field-post-search-ajax" : "*",
 	"wpackagist-plugin/extend-link": "*"
   },
   "require-dev": {
