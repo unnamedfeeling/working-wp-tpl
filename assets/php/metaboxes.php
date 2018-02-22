@@ -2,8 +2,7 @@
 function generic_metaboxes() {
 	// Start with an underscore to hide fields from custom fields list
 	global $options;
-	// $prefix = 'startime_';
-	$prefix = $options['prfx'];
+	$p = $options['prfx'];
 
 	/**
 	 * Initiate the metabox
@@ -38,7 +37,7 @@ function generic_metaboxes() {
 		'id'   => $p.'mod_slider',
 		'type' => 'checkbox'
 	) );
-	
+
 	$cmb_main = new_cmb2_box( array(
 		'id'            => 'main_metabox',
 		'title'         => __( 'Данные для этой страницы', 'cmb2' ),
@@ -51,7 +50,7 @@ function generic_metaboxes() {
 		// 'closed'     => true, // Keep the metabox closed by default
 	) );
 	$main_slider = $cmb_main->add_field( array(
-		'id'          => $prefix.'mainslider',
+		'id'          => $p.'mainslider',
 		'type'        => 'group',
 		'description' => __( 'Слайды для главного слайдера', 'generic' ),
 		// 'repeatable'  => false, // use false if you want non-repeatable group
@@ -73,13 +72,13 @@ function generic_metaboxes() {
 	) );
 	$cmb_main->add_field( array(
 		'name' => __( 'Описание блока "О нас"', 'generic' ),
-		'id'   => $prefix.'about_descr',
+		'id'   => $p.'about_descr',
 		'type' => 'wysiwyg'
 	) );
 	$cmb_main->add_field( array(
 		'name'    => __( 'Прикрепленные сотрудники', 'generic' ),
 		// 'desc'    => __( 'Select which programs to show on this page', 'generic' ),
-		'id'      => $prefix.'attached_staff',
+		'id'      => $p.'attached_staff',
 		'type'    => 'custom_attached_posts',
 		'options' => array(
 			'show_thumbnails' => false, // Show thumbnails on the left

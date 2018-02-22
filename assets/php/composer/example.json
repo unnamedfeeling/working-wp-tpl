@@ -27,10 +27,10 @@
 	"preferred-install": "dist"
   },
   "repositories": [
-	{
-	  "type": "composer",
-	  "url": "https://wpackagist.org"
-	},
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org"
+    },
 	{
 		"type": "vcs",
 		"url": "https://github.com/unnamedfeeling/working-wp-tpl"
@@ -40,25 +40,49 @@
 		"url": "https://github.com/unnamedfeeling/wpfilemanager-mod"
 	},
 	{
-		"type": "vcs",
-		"url": "https://github.com/CMB2/CMB2"
-	},
+      "type": "package",
+      "package": {
+        "name": "CMB2/CMB2",
+        "version": "1.0",
+        "type": "wordpress-plugin",
+        "dist": {
+          "type": "zip",
+          "url": "https://github.com/CMB2/CMB2/archive/master.zip"
+        }
+      }
+    },
 	{
-		"type": "vcs",
-		"url": "https://github.com/CMB2/cmb2-attached-posts"
-	},
+      "type": "package",
+      "package": {
+        "name": "CMB2/cmb2-attached-posts-custom",
+        "version": "1.0",
+        "type": "wordpress-plugin",
+        "dist": {
+          "type": "zip",
+          "url": "https://github.com/CMB2/cmb2-attached-posts/archive/master.zip"
+        }
+      }
+    },
 	{
-		"type": "vcs",
-		"url": "https://github.com/alexis-magina/cmb2-field-post-search-ajax"
-	}
+      "type": "package",
+      "package": {
+        "name": "alexis-magina/cmb2-field-post-search-ajax-custom",
+        "version": "1.0",
+        "type": "wordpress-plugin",
+        "dist": {
+          "type": "zip",
+          "url": "https://github.com/alexis-magina/cmb2-field-post-search-ajax/archive/master.zip"
+        }
+      }
+    }
   ],
   "require": {
-	"php": ">=5.6",
-	"composer/installers": "^1.4",
-	"vlucas/phpdotenv": "^2.0.1",
-	"johnpbloch/wordpress": "4.9.2",
-	"oscarotero/env": "^1.1.0",
-	"roots/wp-password-bcrypt": "1.0.0",
+    "php": ">=5.6",
+    "composer/installers": "^1.4",
+    "vlucas/phpdotenv": "^2.0.1",
+    "johnpbloch/wordpress": "4.9.4",
+    "oscarotero/env": "^1.1.0",
+    "roots/wp-password-bcrypt": "1.0.0",
 	"wpackagist-plugin/cyr3lat": "*",
 	"wpackagist-plugin/w3-total-cache": "*",
 	"wpackagist-plugin/tinymce-advanced": "*",
@@ -76,21 +100,22 @@
 	"wpackagist-plugin/breadcrumb-navxt": "*",
 	"wpackagist-plugin/bootstrap-3-shortcodes": "*",
 	"unnamedfeeling/wpfilemanager-mod" : "*",
+	"unnamedfeeling/working-wp-tpl" : "*",
 	"CMB2/CMB2" : "*",
-	"CMB2/cmb2-attached-posts" : "*",
-	"alexis-magina/cmb2-field-post-search-ajax" : "*",
+	"CMB2/cmb2-attached-posts-custom" : "*",
+	"alexis-magina/cmb2-field-post-search-ajax-custom" : "*",
 	"wpackagist-plugin/extend-link": "*"
   },
   "require-dev": {
-	"squizlabs/php_codesniffer": "^3.0.2"
+    "squizlabs/php_codesniffer": "^3.0.2"
   },
   "extra": {
-	"installer-paths": {
-	  "web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
-	  "web/app/plugins/{$name}/": ["type:wordpress-plugin"],
-	  "web/app/themes/{$name}/": ["type:wordpress-theme"]
-	},
-	"wordpress-install-dir": "web/wp"
+    "installer-paths": {
+      "web/app/mu-plugins/{$name}/": ["type:wordpress-muplugin", "CMB2/CMB2", "CMB2/cmb2-attached-posts-custom", "alexis-magina/cmb2-field-post-search-ajax-custom"],
+      "web/app/plugins/{$name}/": ["type:wordpress-plugin"],
+      "web/app/themes/{$name}/": ["type:wordpress-theme"]
+    },
+    "wordpress-install-dir": "web/wp"
   },
   "scripts": {
 	"post-root-package-install": [
