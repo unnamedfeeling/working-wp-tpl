@@ -9,21 +9,21 @@
     External Modules/Files
 \*------------------------------------*/
 
-// CMB2
-if ( file_exists( dirname( __FILE__ ) . '/assets/php/cmb2/init.php' ) ) {
-  require_once dirname( __FILE__ ) . '/assets/php/cmb2/init.php';
-} elseif ( file_exists(  dirname( __FILE__ ) . '/assets/php/CMB2/init.php' ) ) {
-  require_once dirname( __FILE__ ) . '/assets/php/CMB2/init.php';
-}
-// CMB2 attached posts
-if ( file_exists( dirname( __FILE__ ) . '/assets/php/cmb2-attached-posts/cmb2-attached-posts-field.php' ) ) {
-  require_once dirname( __FILE__ ) . '/assets/php/cmb2-attached-posts/cmb2-attached-posts-field.php';
-}
-
-// CMB2 attached posts ajax
-if ( file_exists( dirname( __FILE__ ) . '/assets/php/cmb2-field-post-search-ajax/cmb-field-post-search-ajax.php' ) ) {
-  require_once dirname( __FILE__ ) . '/assets/php/cmb2-field-post-search-ajax/cmb-field-post-search-ajax.php';
-}
+// // CMB2
+// if ( file_exists( dirname( __FILE__ ) . '/assets/php/cmb2/init.php' ) ) {
+//   require_once dirname( __FILE__ ) . '/assets/php/cmb2/init.php';
+// } elseif ( file_exists(  dirname( __FILE__ ) . '/assets/php/CMB2/init.php' ) ) {
+//   require_once dirname( __FILE__ ) . '/assets/php/CMB2/init.php';
+// }
+// // CMB2 attached posts
+// if ( file_exists( dirname( __FILE__ ) . '/assets/php/cmb2-attached-posts/cmb2-attached-posts-field.php' ) ) {
+//   require_once dirname( __FILE__ ) . '/assets/php/cmb2-attached-posts/cmb2-attached-posts-field.php';
+// }
+//
+// // CMB2 attached posts ajax
+// if ( file_exists( dirname( __FILE__ ) . '/assets/php/cmb2-field-post-search-ajax/cmb-field-post-search-ajax.php' ) ) {
+//   require_once dirname( __FILE__ ) . '/assets/php/cmb2-field-post-search-ajax/cmb-field-post-search-ajax.php';
+// }
 
 // metaboxes include
 if ( file_exists( dirname( __FILE__ ) . '/assets/php/metaboxes.php' ) ) {
@@ -219,6 +219,10 @@ class Nav_Menu_Walker extends Walker_Nav_Menu{
 		}
 		! empty ( $item->url )
 			and $attributes .= ' href="' . esc_attr( $item->url ) .'"';
+
+		$attributes .= ! empty( $item->target )     ? ' target="' . esc_attr( $item->target     ) .'"' : '';
+		$attributes .= ! empty( $item->xfn )        ? ' rel="'    . esc_attr( $item->xfn        ) .'"' : '';
+		
 		$attributes  = trim( $attributes );
 		$title       = apply_filters( 'the_title', $item->title, $item->ID );
 		$item_output = "$args->before<a $attributes>$args->link_before$title</a>"
@@ -318,6 +322,10 @@ class Nav_Footer1_Menu_Walker extends Walker_Nav_Menu{
 		}
 		! empty ( $item->url )
 			and $attributes .= ' href="' . esc_attr( $item->url ) .'"';
+
+		$attributes .= ! empty( $item->target )     ? ' target="' . esc_attr( $item->target     ) .'"' : '';
+		$attributes .= ! empty( $item->xfn )        ? ' rel="'    . esc_attr( $item->xfn        ) .'"' : '';
+		
 		$attributes  = trim( $attributes );
 		$title       = apply_filters( 'the_title', $item->title, $item->ID );
 		$item_output = "$args->before<a $attributes>$args->link_before$title</a>"
@@ -412,6 +420,10 @@ class Nav_Footer2_Menu_Walker extends Walker_Nav_Menu{
 		}
 		! empty ( $item->url )
 			and $attributes .= ' href="' . esc_attr( $item->url ) .'"';
+
+		$attributes .= ! empty( $item->target )     ? ' target="' . esc_attr( $item->target     ) .'"' : '';
+		$attributes .= ! empty( $item->xfn )        ? ' rel="'    . esc_attr( $item->xfn        ) .'"' : '';
+		
 		$attributes  = trim( $attributes );
 		$title       = apply_filters( 'the_title', $item->title, $item->ID );
 		$item_output = "$args->before<a $attributes>$args->link_before$title</a>"
@@ -1007,126 +1019,188 @@ function wpa83367_price_html( $price, $product ){
 /*
  * Function creates post duplicate as a draft and redirects then to the edit post screen
  */
-function rd_duplicate_post_as_draft(){
-	global $wpdb;
-	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'rd_duplicate_post_as_draft' == $_REQUEST['action'] ) ) ) {
-		wp_die('No post to duplicate has been supplied!');
-	}
+ function generic_duplicate_post_as_draft(){
+ 	global $wpdb;
+ 	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'generic_duplicate_post_as_draft' == $_REQUEST['action'] ) ) ) {
+ 		wp_die('No post to duplicate has been supplied!');
+ 	}
 
-	/*
-	 * Nonce verification
-	 */
-	if ( !isset( $_GET['duplicate_nonce'] ) || !wp_verify_nonce( $_GET['duplicate_nonce'], basename( __FILE__ ) ) )
-		return;
  	/*
-	 * get current paged
-	 */
-	$paged = (isset($_GET['paged']) ? absint( $_GET['paged'] ) : absint( $_POST['paged'] ) ); 	/*
-	 * get current post type (for flexibility)
-	 */
-	$post_type=((!empty($_GET['post_type'])||!empty($_POST['post_type']))?(isset($_GET['post_type']) ? 'post_type='.$_GET['post_type'].'&' : 'post_type='.$_POST['post_type'].'&' ):null);
-	/*
-	 * get the original post id
-	 */
-	$post_id = (isset($_GET['post']) ? absint( $_GET['post'] ) : absint( $_POST['post'] ) );
-	 /*
-	 * and all the original post data then
-	 */
-	$post = get_post( $post_id );
+ 	 * Nonce verification
+ 	 */
+ 	if ( !isset( $_GET['duplicate_nonce'] ) || !wp_verify_nonce( $_GET['duplicate_nonce'], basename( __FILE__ ) ) )
+ 		return;
+  	/*
+ 	 * get current paged
+ 	 */
+ 	$paged = (isset($_GET['paged']) ? absint( $_GET['paged'] ) : absint( $_POST['paged'] ) ); 	/*
+ 	 * get current post type (for flexibility)
+ 	 */
+ 	$post_type=((!empty($_GET['post_type'])||!empty($_POST['post_type']))?(isset($_GET['post_type']) ? 'post_type='.$_GET['post_type'].'&' : 'post_type='.$_POST['post_type'].'&' ):null);
+ 	/*
+ 	 * get the original post id
+ 	 */
+ 	$post_id = (isset($_GET['post']) ? absint( $_GET['post'] ) : absint( $_POST['post'] ) );
+ 	 /*
+ 	 * and all the original post data then
+ 	 */
+ 	$post = get_post( $post_id );
 
-	/*
-	 * if you don't want current user to be the new post author,
-	 * then change next couple of lines to this: $new_post_author = $post->post_author;
-	 */
-	$current_user = wp_get_current_user();
-	$new_post_author = $current_user->ID;
+ 	/*
+ 	 * if you don't want current user to be the new post author,
+ 	 * then change next couple of lines to this: $new_post_author = $post->post_author;
+ 	 */
+ 	$current_user = wp_get_current_user();
+ 	$new_post_author = $current_user->ID;
 
-	/*
-	 * if post data exists, create the post duplicate
-	 */
-	if (isset( $post ) && $post != null) {
+ 	/*
+ 	 * if post data exists, create the post duplicate
+ 	 */
+ 	if (isset( $post ) && $post != null) {
 
-		/*
-		 * new post data array
-		 */
-		$args = array(
-			'comment_status' => $post->comment_status,
-			'ping_status'    => $post->ping_status,
-			'post_author'    => $new_post_author,
-			'post_content'   => $post->post_content,
-			'post_excerpt'   => $post->post_excerpt,
-			'post_name'      => $post->post_name,
-			'post_parent'    => $post->post_parent,
-			'post_password'  => $post->post_password,
-			'post_status'    => 'draft',
-			'post_title'     => $post->post_title,
-			'post_type'      => $post->post_type,
-			'to_ping'        => $post->to_ping,
-			'menu_order'     => $post->menu_order
+ 		/*
+ 		 * new post data array
+ 		 */
+ 		$args = array(
+ 			'comment_status' => $post->comment_status,
+ 			'ping_status'    => $post->ping_status,
+ 			'post_author'    => $new_post_author,
+ 			'post_content'   => $post->post_content,
+ 			'post_excerpt'   => $post->post_excerpt,
+ 			'post_name'      => $post->post_name,
+ 			'post_parent'    => $post->post_parent,
+ 			'post_password'  => $post->post_password,
+ 			'post_status'    => 'draft',
+ 			'post_title'     => $post->post_title,
+ 			'post_type'      => $post->post_type,
+ 			'to_ping'        => $post->to_ping,
+ 			'menu_order'     => $post->menu_order
+ 		);
+
+ 		/*
+ 		 * insert the post by wp_insert_post() function
+ 		 */
+ 		$new_post_id = wp_insert_post( $args );
+
+ 		/*
+ 		 * get all current post terms ad set them to the new post draft
+ 		 */
+ 		$taxonomies = get_object_taxonomies($post->post_type); // returns array of taxonomy names for post type, ex array("category", "post_tag");
+ 		foreach ($taxonomies as $taxonomy) {
+ 			$post_terms = wp_get_object_terms($post_id, $taxonomy, array('fields' => 'slugs'));
+ 			wp_set_object_terms($new_post_id, $post_terms, $taxonomy, false);
+ 		}
+
+ 		/*
+ 		 * duplicate all post meta just in two SQL queries
+ 		 */
+ 		$post_meta_infos = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=$post_id");
+ 		// $post_meta_infos = get_post_meta($post_id, '', false);
+ 		// print_r($post_meta_infos);
+ 		if (count($post_meta_infos[0])!=0) {
+ 			// $sql_query_sel=array();
+ 			// $sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
+ 			// foreach ($post_meta_infos as $meta_info) {
+ 			foreach ($post_meta_infos as $meta_data) {
+ 				$meta_key = $meta_data->meta_key;
+ 				if( $meta_key == '_wp_old_slug' ) continue;
+ 				$meta_value = addslashes($meta_data->meta_value);
+ 				// $sql_query_sel[]= "SELECT $new_post_id, '$meta_key', '$meta_value'";
+ 				update_post_meta( $new_post_id, $meta_key, $meta_value );
+ 			}
+ 			// $sql_query.= implode(" UNION ALL ", $sql_query_sel);
+ 			// $wpdb->query($sql_query);
+ 		}
+
+
+ 		/*
+ 		 * finally, redirect to the edit post screen for the new draft
+ 		 */
+ 		// wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_post_id ) );
+ 		wp_redirect( admin_url( 'edit.php?'.$post_type.'paged='.$paged ) );
+ 		exit;
+ 	} else {
+ 		wp_die('Post creation failed, could not find original post: ' . $post_id);
+ 	}
+ }
+
+
+ /*
+  * Add the duplicate link to action list for post_row_actions
+  */
+ function generic_duplicate_post_link( $actions, $post ) {
+ 	if (current_user_can('edit_posts')) {
+ 		 /*
+ 		 * get current paged
+ 		 */
+ 		$paged = ((!empty($_GET['paged'])||!empty($_POST['paged']))?(isset($_GET['paged']) ? absint( $_GET['paged'] ) : absint( $_POST['paged'] ) ):'1');
+ 		$post_type=((!empty($_GET['post_type'])||!empty($_POST['post_type']))?(isset($_GET['post_type']) ? 'post_type='.$_GET['post_type'].'&' : 'post_type='.$_POST['post_type'].'&' ):null);
+
+ 		$actions['duplicate'] = '<a href="' . wp_nonce_url('admin.php?'.$post_type.'paged='.$paged.'&action=generic_duplicate_post_as_draft&post=' . $post->ID, basename(__FILE__), 'duplicate_nonce' ) . '" title="Duplicate this item" rel="permalink">Duplicate</a>';
+ 	}
+ 	return $actions;
+ }
+
+// generate lazy loading image
+function lazy_wp_get_attachment_image($attachment_id, $size = 'thumbnail', $placeholder='', $lazyLoadAttr='data-lazy', $icon = false, $attr = '') {
+	$html = '';
+	$image = wp_get_attachment_image_src($attachment_id, $size, $icon);
+	if ( $image ) {
+		list($src, $width, $height) = $image;
+		$hwstring = image_hwstring($width, $height);
+		$size_class = $size;
+		if ( is_array( $size_class ) ) {
+			$size_class = join( 'x', $size_class );
+		}
+		$attachment = get_post($attachment_id);
+		$default_attr = array(
+			'src'	=> $placeholder,
+			$lazyLoadAttr	=> $src,
+			'class'	=> "attachment-$size_class size-$size_class",
+			'alt'	=> trim( strip_tags( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ),
 		);
 
-		/*
-		 * insert the post by wp_insert_post() function
-		 */
-		$new_post_id = wp_insert_post( $args );
+		$attr = wp_parse_args( $attr, $default_attr );
 
-		/*
-		 * get all current post terms ad set them to the new post draft
-		 */
-		$taxonomies = get_object_taxonomies($post->post_type); // returns array of taxonomy names for post type, ex array("category", "post_tag");
-		foreach ($taxonomies as $taxonomy) {
-			$post_terms = wp_get_object_terms($post_id, $taxonomy, array('fields' => 'slugs'));
-			wp_set_object_terms($new_post_id, $post_terms, $taxonomy, false);
-		}
+		// Generate 'srcset' and 'sizes' if not already present.
+		if ( empty( $attr['srcset'] ) ) {
+			$image_meta = wp_get_attachment_metadata( $attachment_id );
 
-		/*
-		 * duplicate all post meta just in two SQL queries
-		 */
-		$post_meta_infos = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=$post_id");
-		// $post_meta_infos = get_post_meta($post_id, '', false);
-		// print_r($post_meta_infos);
-		if (count($post_meta_infos[0])!=0) {
-			// $sql_query_sel=array();
-			// $sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-			// foreach ($post_meta_infos as $meta_info) {
-			foreach ($post_meta_infos as $meta_data) {
-				$meta_key = $meta_data->meta_key;
-				if( $meta_key == '_wp_old_slug' ) continue;
-				$meta_value = addslashes($meta_data->meta_value);
-				// $sql_query_sel[]= "SELECT $new_post_id, '$meta_key', '$meta_value'";
-				update_post_meta( $new_post_id, $meta_key, $meta_value );
+			if ( is_array( $image_meta ) ) {
+				$size_array = array( absint( $width ), absint( $height ) );
+				$srcset = wp_calculate_image_srcset( $size_array, $src, $image_meta, $attachment_id );
+				$sizes = wp_calculate_image_sizes( $size_array, $src, $image_meta, $attachment_id );
+
+				if ( $srcset && ( $sizes || ! empty( $attr['sizes'] ) ) ) {
+					$attr['srcset'] = $srcset;
+
+					if ( empty( $attr['sizes'] ) ) {
+						$attr['sizes'] = $sizes;
+					}
+				}
 			}
-			// $sql_query.= implode(" UNION ALL ", $sql_query_sel);
-			// $wpdb->query($sql_query);
 		}
 
-
-		/*
-		 * finally, redirect to the edit post screen for the new draft
+		/**
+		 * Filters the list of attachment image attributes.
+		 *
+		 * @since 2.8.0
+		 *
+		 * @param array        $attr       Attributes for the image markup.
+		 * @param WP_Post      $attachment Image attachment post.
+		 * @param string|array $size       Requested size. Image size or array of width and height values
+		 *                                 (in that order). Default 'thumbnail'.
 		 */
-		// wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_post_id ) );
-		wp_redirect( admin_url( 'edit.php?'.$post_type.'paged='.$paged ) );
-		exit;
-	} else {
-		wp_die('Post creation failed, could not find original post: ' . $post_id);
+		$attr = apply_filters( 'wp_get_attachment_image_attributes', $attr, $attachment, $size );
+		$attr = array_map( 'esc_attr', $attr );
+		$html = rtrim("<img $hwstring");
+		foreach ( $attr as $name => $value ) {
+			$html .= " $name=" . '"' . $value . '"';
+		}
+		$html .= ' />';
 	}
-}
 
-
-/*
- * Add the duplicate link to action list for post_row_actions
- */
-function rd_duplicate_post_link( $actions, $post ) {
-	if (current_user_can('edit_posts')) {
-		 /*
-		 * get current paged
-		 */
-		$paged = ((!empty($_GET['paged'])||!empty($_POST['paged']))?(isset($_GET['paged']) ? absint( $_GET['paged'] ) : absint( $_POST['paged'] ) ):'1');
-		$post_type=((!empty($_GET['post_type'])||!empty($_POST['post_type']))?(isset($_GET['post_type']) ? 'post_type='.$_GET['post_type'].'&' : 'post_type='.$_POST['post_type'].'&' ):null);
-
-		$actions['duplicate'] = '<a href="' . wp_nonce_url('admin.php?'.$post_type.'paged='.$paged.'&action=rd_duplicate_post_as_draft&post=' . $post->ID, basename(__FILE__), 'duplicate_nonce' ) . '" title="Duplicate this item" rel="permalink">Duplicate</a>';
-	}
-	return $actions;
+	return $html;
 }
 
 /*------------------------------------*\
